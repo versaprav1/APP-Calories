@@ -92,29 +92,28 @@ export default function Dashboard() {
           </div>
 
           {/* Welcome Section */}
-          <div className="absolute w-full top-[150px] px-6">
-            <h1 className="text-white text-[28px] font-semibold text-center mb-2">
+          <div className="absolute top-[150px] left-0 w-full px-4 pb-4" style={{ height: 'calc(100% - 150px)', overflowY: 'auto' }}>
+            <h1 className="text-white text-[24px] font-semibold text-center mb-1">
               Welcome Back!
             </h1>
-            <p className="text-white/80 text-[16px] text-center mb-6">
-              Choose your triathlon discipline
+            <p className="text-white/80 text-[14px] text-center mb-3">
+              Choose your activity
             </p>
 
             {/* Triathlon Activities */}
-            <div className="mb-6">
-              <h2 className="text-white text-[20px] font-medium mb-4 text-center">
+            <div className="mb-3">
+              <h2 className="text-white text-[18px] font-medium mb-2 text-center">
                 🏆 Triathlon Training
               </h2>
-              <div className="space-y-3">
+              <div className="space-y-2">
                 {activities.map((activity, index) => (
                   <div 
                     key={activity.id}
-                    className="bg-white/95 rounded-[20px] p-4 shadow-lg transform hover:scale-105 transition-all duration-300"
-                    style={{ animationDelay: `${index * 0.1}s` }}
+                    className="bg-white/95 rounded-[16px] p-3 shadow-sm"
                   >
-                    <div className="flex items-center space-x-4">
+                    <div className="flex items-center space-x-3">
                       <div 
-                        className="w-[50px] h-[50px] rounded-full flex items-center justify-center text-[24px]"
+                        className="w-[40px] h-[40px] rounded-full flex items-center justify-center text-[20px]"
                         style={{ backgroundColor: activity.color }}
                       >
                         {activity.icon}
@@ -122,23 +121,23 @@ export default function Dashboard() {
                       
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1">
-                          <h3 className="text-[#4a6bda] text-[16px] font-semibold">
+                          <h3 className="text-[#4a6bda] text-[14px] font-semibold">
                             {activity.title}
                           </h3>
-                          <span className={`px-2 py-1 rounded-full text-[10px] font-medium ${
+                          <span className={`px-1.5 py-0.5 rounded-full text-[8px] font-medium ${
                             activity.status === 'Complete' ? 'bg-green-100 text-green-600' : 'bg-blue-100 text-blue-600'
                           }`}>
                             {activity.status}
                           </span>
                         </div>
-                        <p className="text-[#707070] text-[12px] leading-relaxed">
+                        <p className="text-[#707070] text-[10px] leading-tight">
                           {activity.description}
                         </p>
                       </div>
                       
                       <Button
                         onClick={() => setLocation(activity.route)}
-                        className="w-[70px] h-[30px] rounded-[15px] text-[12px] font-medium"
+                        className="w-[55px] h-[24px] rounded-[12px] text-[10px] font-medium"
                         style={{ 
                           backgroundColor: activity.color,
                           color: "#4a6bda"
@@ -153,39 +152,38 @@ export default function Dashboard() {
             </div>
 
             {/* Other Health Activities */}
-            <div className="mb-4">
-              <h2 className="text-white text-[18px] font-medium mb-3 text-center">
+            <div className="mb-3">
+              <h2 className="text-white text-[16px] font-medium mb-2 text-center">
                 📊 Health Tracking
               </h2>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-2 gap-2">
                 {otherActivities.map((activity, index) => (
                   <div 
                     key={activity.id}
-                    className="bg-white/90 rounded-[15px] p-3 shadow-sm hover:scale-105 transition-all duration-300"
-                    style={{ animationDelay: `${(index + 3) * 0.1}s` }}
+                    className="bg-white/90 rounded-[12px] p-2 shadow-sm"
                   >
                     <div className="text-center">
                       <div 
-                        className="w-[40px] h-[40px] rounded-full flex items-center justify-center mx-auto mb-2"
+                        className="w-[30px] h-[30px] rounded-full flex items-center justify-center mx-auto mb-1"
                         style={{ backgroundColor: activity.color }}
                       >
                         <img
                           src={activity.icon}
                           alt={activity.title}
-                          className="w-[24px] h-[24px]"
+                          className="w-[18px] h-[18px]"
                         />
                       </div>
                       
-                      <h3 className="text-[#4a6bda] text-[14px] font-semibold mb-1">
+                      <h3 className="text-[#4a6bda] text-[12px] font-semibold mb-1">
                         {activity.title}
                       </h3>
-                      <p className="text-[#707070] text-[10px] leading-tight mb-2">
+                      <p className="text-[#707070] text-[9px] leading-tight mb-2">
                         {activity.description}
                       </p>
                       
                       <Button
                         onClick={() => setLocation(activity.route)}
-                        className="w-full h-[25px] rounded-[12px] text-[11px] font-medium"
+                        className="w-full h-[20px] rounded-[10px] text-[9px] font-medium"
                         style={{ 
                           backgroundColor: activity.color,
                           color: "#4a6bda"
@@ -200,32 +198,32 @@ export default function Dashboard() {
             </div>
 
             {/* Stats Overview */}
-            <div className="mt-8 bg-white/10 rounded-[20px] p-4">
-              <h3 className="text-white text-[16px] font-medium mb-3 text-center">
+            <div className="mb-3 bg-white/10 rounded-[16px] p-3">
+              <h3 className="text-white text-[14px] font-medium mb-2 text-center">
                 Today's Progress
               </h3>
               <div className="flex justify-around">
                 <div className="text-center">
-                  <div className="text-white text-[20px] font-bold">1,250</div>
-                  <div className="text-white/70 text-[12px]">Calories</div>
+                  <div className="text-white text-[16px] font-bold">1,250</div>
+                  <div className="text-white/70 text-[10px]">Calories</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-white text-[20px] font-bold">65g</div>
-                  <div className="text-white/70 text-[12px]">Protein</div>
+                  <div className="text-white text-[16px] font-bold">65g</div>
+                  <div className="text-white/70 text-[10px]">Protein</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-white text-[20px] font-bold">2.1km</div>
-                  <div className="text-white/70 text-[12px]">Distance</div>
+                  <div className="text-white text-[16px] font-bold">2.1km</div>
+                  <div className="text-white/70 text-[10px]">Distance</div>
                 </div>
               </div>
             </div>
 
             {/* Logout Button */}
-            <div className="mt-6 flex justify-center">
+            <div className="flex justify-center">
               <Button
                 variant="outline"
                 onClick={() => setLocation("/")}
-                className="w-[140px] h-[40px] rounded-[25px] bg-white/10 border-white/30 text-white text-[14px] font-medium hover:bg-white/20"
+                className="w-[120px] h-[30px] rounded-[20px] bg-white/10 border-white/30 text-white text-[12px] font-medium hover:bg-white/20"
               >
                 Logout
               </Button>
