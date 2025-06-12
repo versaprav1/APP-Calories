@@ -160,6 +160,40 @@ export default function Dashboard() {
           </div>
         </div>
 
+        {/* Quick Actions */}
+        <div className="mb-6">
+          <h2 className="text-white text-[18px] font-medium mb-3 text-center">
+            ⚡ Quick Actions
+          </h2>
+          <div className="grid grid-cols-2 gap-3">
+            <div 
+              onClick={() => setLocation("/workout-setup")}
+              className="bg-white/90 rounded-[15px] p-3 shadow-sm cursor-pointer hover:bg-white transition-colors"
+            >
+              <div className="text-center">
+                <div className="w-[40px] h-[40px] rounded-full bg-orange-200 flex items-center justify-center mx-auto mb-2">
+                  <span className="text-[20px]">📝</span>
+                </div>
+                <h3 className="text-[#4a6bda] text-[14px] font-semibold mb-1">Log Workout</h3>
+                <p className="text-[#707070] text-[10px] leading-tight">Add exercise data</p>
+              </div>
+            </div>
+            
+            <div 
+              onClick={() => setLocation("/calorie-logging")}
+              className="bg-white/90 rounded-[15px] p-3 shadow-sm cursor-pointer hover:bg-white transition-colors"
+            >
+              <div className="text-center">
+                <div className="w-[40px] h-[40px] rounded-full bg-teal-200 flex items-center justify-center mx-auto mb-2">
+                  <span className="text-[20px]">🍽️</span>
+                </div>
+                <h3 className="text-[#4a6bda] text-[14px] font-semibold mb-1">Log Calories</h3>
+                <p className="text-[#707070] text-[10px] leading-tight">Track meals</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Health Activities */}
         <div className="mb-6">
           <h2 className="text-white text-[18px] font-medium mb-3 text-center">
