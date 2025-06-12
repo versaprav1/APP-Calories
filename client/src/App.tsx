@@ -23,6 +23,14 @@ import ProfileSetup from "@/pages/ProfileSetup";
 import Account from "@/pages/Account";
 import Activity from "@/pages/Activity";
 import Resources from "@/pages/Resources";
+import DashboardSetup from "@/pages/DashboardSetup";
+import AddEditEmail from "@/pages/AddEditEmail";
+import Help from "@/pages/Help";
+import Settings from "@/pages/Settings";
+import Devices from "@/pages/Devices";
+import Reminders from "@/pages/Reminders";
+import FAQ from "@/pages/FAQ";
+import Data from "@/pages/Data";
 
 function Router() {
   return (
