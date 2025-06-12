@@ -31,6 +31,12 @@ import Devices from "@/pages/Devices";
 import Reminders from "@/pages/Reminders";
 import FAQ from "@/pages/FAQ";
 import Data from "@/pages/Data";
+import DailyActivities from "@/pages/DailyActivities";
+import WeeklySummary from "@/pages/WeeklySummary";
+import GoalsProgress from "@/pages/GoalsProgress";
+import WorkoutHistory from "@/pages/WorkoutHistory";
+import PerformanceAnalytics from "@/pages/PerformanceAnalytics";
+import ActivitySettings from "@/pages/ActivitySettings";
 
 function Router() {
   return (
@@ -62,6 +68,12 @@ function Router() {
       <Route path="/reminders" component={Reminders} />
       <Route path="/faq" component={FAQ} />
       <Route path="/data" component={Data} />
+      <Route path="/daily-activities" component={DailyActivities} />
+      <Route path="/weekly-summary" component={WeeklySummary} />
+      <Route path="/goals-progress" component={GoalsProgress} />
+      <Route path="/workout-history" component={WorkoutHistory} />
+      <Route path="/performance-analytics" component={PerformanceAnalytics} />
+      <Route path="/activity-settings" component={ActivitySettings} />
       {/* Fallback to 404 */}
       <Route component={NotFound} />
     </Switch>
