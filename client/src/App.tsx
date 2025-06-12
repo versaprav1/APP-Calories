@@ -54,6 +54,14 @@ function Router() {
       <Route path="/account" component={Account} />
       <Route path="/activity" component={Activity} />
       <Route path="/resources" component={Resources} />
+      <Route path="/dashboard-setup" component={DashboardSetup} />
+      <Route path="/add-edit-email" component={AddEditEmail} />
+      <Route path="/help" component={Help} />
+      <Route path="/settings" component={Settings} />
+      <Route path="/devices" component={Devices} />
+      <Route path="/reminders" component={Reminders} />
+      <Route path="/faq" component={FAQ} />
+      <Route path="/data" component={Data} />
       {/* Fallback to 404 */}
       <Route component={NotFound} />
     </Switch>
