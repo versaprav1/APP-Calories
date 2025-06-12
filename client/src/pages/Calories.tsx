@@ -1,8 +1,10 @@
 import React from "react";
+import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
 export const Calories = (): JSX.Element => {
+  const [, setLocation] = useLocation();
   // Data for pagination dots
   const paginationDots = [
     { active: false },
