@@ -13,6 +13,11 @@ import Dashboard from "@/pages/Dashboard";
 import FoodTracking from "@/pages/FoodTracking";
 import NutritionPlans from "@/pages/NutritionPlans";
 import FitnessGoals from "@/pages/FitnessGoals";
+import Swimming from "@/pages/Swimming";
+import Cycling from "@/pages/Cycling";
+import Running from "@/pages/Running";
+import CalorieControl from "@/pages/CalorieControl";
+import WeightControl from "@/pages/WeightControl";
 
 function Router() {
   return (
@@ -26,6 +31,11 @@ function Router() {
       <Route path="/food-tracking" component={FoodTracking} />
       <Route path="/nutrition-plans" component={NutritionPlans} />
       <Route path="/fitness-goals" component={FitnessGoals} />
+      <Route path="/swimming" component={Swimming} />
+      <Route path="/cycling" component={Cycling} />
+      <Route path="/running" component={Running} />
+      <Route path="/calorie-control" component={CalorieControl} />
+      <Route path="/weight-control" component={WeightControl} />
       {/* Fallback to 404 */}
       <Route component={NotFound} />
     </Switch>

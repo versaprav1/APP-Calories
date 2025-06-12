@@ -8,26 +8,56 @@ export default function Dashboard() {
   const activities = [
     {
       id: 1,
-      title: "Food Tracking",
-      description: "Monitor your daily food intake and calories",
-      icon: "/figmaAssets/component-2.svg",
+      title: "Swimming",
+      description: "Track your swimming sessions and technique",
+      icon: "🏊‍♂️",
       color: "#70c1e4",
-      route: "/food-tracking"
+      route: "/swimming",
+      status: "Ready"
     },
     {
       id: 2,
-      title: "Nutrition Plans",
-      description: "Customize meal plans and nutritional goals",
-      icon: "/figmaAssets/component-3.svg", 
+      title: "Cycling",
+      description: "Monitor cycling distance and performance",
+      icon: "🚴‍♂️", 
       color: "#8fd4e8",
-      route: "/nutrition-plans"
+      route: "/cycling",
+      status: "Ready"
     },
     {
       id: 3,
-      title: "Fitness Goals",
-      description: "Set and track your fitness achievements",
-      icon: "/figmaAssets/component-4.svg",
+      title: "Running",
+      description: "Track running pace and achievements",
+      icon: "🏃‍♂️",
       color: "#a4e2ec",
+      route: "/running",
+      status: "Complete"
+    }
+  ];
+
+  const otherActivities = [
+    {
+      id: 4,
+      title: "Calorie Control",
+      description: "Monitor daily calorie intake and nutrition",
+      icon: "/figmaAssets/component-2.svg",
+      color: "#b8eaf0",
+      route: "/calorie-control"
+    },
+    {
+      id: 5,
+      title: "Weight Control",
+      description: "Track weight goals and body composition",
+      icon: "/figmaAssets/component-4.svg",
+      color: "#c8f0f4",
+      route: "/weight-control"
+    },
+    {
+      id: 6,
+      title: "Fitness Goals",
+      description: "Set and achieve comprehensive fitness targets",
+      icon: "/figmaAssets/component-3.svg",
+      color: "#d8f6f8",
       route: "/fitness-goals"
     }
   ];
@@ -66,52 +96,107 @@ export default function Dashboard() {
             <h1 className="text-white text-[28px] font-semibold text-center mb-2">
               Welcome Back!
             </h1>
-            <p className="text-white/80 text-[16px] text-center mb-8">
-              Choose your health activity
+            <p className="text-white/80 text-[16px] text-center mb-6">
+              Choose your triathlon discipline
             </p>
 
-            {/* Triathlon Activity Options */}
-            <div className="space-y-4">
-              {activities.map((activity, index) => (
-                <div 
-                  key={activity.id}
-                  className="bg-white/95 rounded-[20px] p-4 shadow-lg transform hover:scale-105 transition-all duration-300"
-                  style={{ animationDelay: `${index * 0.1}s` }}
-                >
-                  <div className="flex items-center space-x-4">
-                    <div 
-                      className="w-[60px] h-[60px] rounded-full flex items-center justify-center"
-                      style={{ backgroundColor: activity.color }}
-                    >
-                      <img
-                        src={activity.icon}
-                        alt={activity.title}
-                        className="w-[40px] h-[40px]"
-                      />
+            {/* Triathlon Activities */}
+            <div className="mb-6">
+              <h2 className="text-white text-[20px] font-medium mb-4 text-center">
+                🏆 Triathlon Training
+              </h2>
+              <div className="space-y-3">
+                {activities.map((activity, index) => (
+                  <div 
+                    key={activity.id}
+                    className="bg-white/95 rounded-[20px] p-4 shadow-lg transform hover:scale-105 transition-all duration-300"
+                    style={{ animationDelay: `${index * 0.1}s` }}
+                  >
+                    <div className="flex items-center space-x-4">
+                      <div 
+                        className="w-[50px] h-[50px] rounded-full flex items-center justify-center text-[24px]"
+                        style={{ backgroundColor: activity.color }}
+                      >
+                        {activity.icon}
+                      </div>
+                      
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          <h3 className="text-[#4a6bda] text-[16px] font-semibold">
+                            {activity.title}
+                          </h3>
+                          <span className={`px-2 py-1 rounded-full text-[10px] font-medium ${
+                            activity.status === 'Complete' ? 'bg-green-100 text-green-600' : 'bg-blue-100 text-blue-600'
+                          }`}>
+                            {activity.status}
+                          </span>
+                        </div>
+                        <p className="text-[#707070] text-[12px] leading-relaxed">
+                          {activity.description}
+                        </p>
+                      </div>
+                      
+                      <Button
+                        onClick={() => setLocation(activity.route)}
+                        className="w-[70px] h-[30px] rounded-[15px] text-[12px] font-medium"
+                        style={{ 
+                          backgroundColor: activity.color,
+                          color: "#4a6bda"
+                        }}
+                      >
+                        Start
+                      </Button>
                     </div>
-                    
-                    <div className="flex-1">
-                      <h3 className="text-[#4a6bda] text-[18px] font-semibold mb-1">
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Other Health Activities */}
+            <div className="mb-4">
+              <h2 className="text-white text-[18px] font-medium mb-3 text-center">
+                📊 Health Tracking
+              </h2>
+              <div className="grid grid-cols-2 gap-3">
+                {otherActivities.map((activity, index) => (
+                  <div 
+                    key={activity.id}
+                    className="bg-white/90 rounded-[15px] p-3 shadow-sm hover:scale-105 transition-all duration-300"
+                    style={{ animationDelay: `${(index + 3) * 0.1}s` }}
+                  >
+                    <div className="text-center">
+                      <div 
+                        className="w-[40px] h-[40px] rounded-full flex items-center justify-center mx-auto mb-2"
+                        style={{ backgroundColor: activity.color }}
+                      >
+                        <img
+                          src={activity.icon}
+                          alt={activity.title}
+                          className="w-[24px] h-[24px]"
+                        />
+                      </div>
+                      
+                      <h3 className="text-[#4a6bda] text-[14px] font-semibold mb-1">
                         {activity.title}
                       </h3>
-                      <p className="text-[#707070] text-[14px] leading-relaxed">
+                      <p className="text-[#707070] text-[10px] leading-tight mb-2">
                         {activity.description}
                       </p>
+                      
+                      <Button
+                        onClick={() => setLocation(activity.route)}
+                        className="w-full h-[25px] rounded-[12px] text-[11px] font-medium"
+                        style={{ 
+                          backgroundColor: activity.color,
+                          color: "#4a6bda"
+                        }}
+                      >
+                        Open
+                      </Button>
                     </div>
-                    
-                    <Button
-                      onClick={() => setLocation(activity.route)}
-                      className="w-[80px] h-[35px] rounded-[20px] text-[14px] font-medium"
-                      style={{ 
-                        backgroundColor: activity.color,
-                        color: "#4a6bda"
-                      }}
-                    >
-                      Start
-                    </Button>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
 
             {/* Stats Overview */}
