@@ -37,6 +37,11 @@ import GoalsProgress from "@/pages/GoalsProgress";
 import WorkoutHistory from "@/pages/WorkoutHistory";
 import PerformanceAnalytics from "@/pages/PerformanceAnalytics";
 import ActivitySettings from "@/pages/ActivitySettings";
+import TrainingGuides from "@/pages/TrainingGuides";
+import HealthArticles from "@/pages/HealthArticles";
+import VideoTutorials from "@/pages/VideoTutorials";
+import MealPlans from "@/pages/MealPlans";
+import ExerciseLibrary from "@/pages/ExerciseLibrary";
 
 function Router() {
   return (
@@ -74,6 +79,12 @@ function Router() {
       <Route path="/workout-history" component={WorkoutHistory} />
       <Route path="/performance-analytics" component={PerformanceAnalytics} />
       <Route path="/activity-settings" component={ActivitySettings} />
+      <Route path="/training-guides" component={TrainingGuides} />
+      <Route path="/nutrition-information" component={NutritionPlans} />
+      <Route path="/health-articles" component={HealthArticles} />
+      <Route path="/video-tutorials" component={VideoTutorials} />
+      <Route path="/meal-plans" component={MealPlans} />
+      <Route path="/exercise-library" component={ExerciseLibrary} />
       {/* Fallback to 404 */}
       <Route component={NotFound} />
     </Switch>

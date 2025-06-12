@@ -1,178 +1,206 @@
-import { useState } from "react";
-import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { ArrowLeft, Target, Clock, Users } from "lucide-react";
+import { useLocation } from "wouter";
 
 export default function NutritionPlans() {
   const [, setLocation] = useLocation();
-  const [selectedPlan, setSelectedPlan] = useState<number | null>(null);
 
-  const nutritionPlans = [
+  const nutritionInfo = [
     {
-      id: 1,
-      title: "Weight Loss Plan",
-      description: "Balanced meals with calorie deficit for healthy weight loss",
-      calories: "1,200-1,500 cal/day",
-      duration: "4-8 weeks",
-      difficulty: "Beginner",
-      color: "#70c1e4",
-      features: ["High protein", "Low carb", "Meal prep friendly", "Snack options"]
+      category: "Macro Nutrients",
+      items: [
+        { name: "Protein", amount: "1.6-2.2g", unit: "per kg body weight", icon: "🥩" },
+        { name: "Carbohydrates", amount: "3-12g", unit: "per kg body weight", icon: "🍞" },
+        { name: "Fats", amount: "0.8-1.2g", unit: "per kg body weight", icon: "🥑" }
+      ]
     },
     {
-      id: 2,
-      title: "Muscle Gain Plan",
-      description: "High protein nutrition to support muscle building",
-      calories: "2,200-2,800 cal/day",
-      duration: "8-12 weeks",
-      difficulty: "Intermediate",
-      color: "#8fd4e8",
-      features: ["High protein", "Pre/post workout", "Supplements guide", "Bulk meals"]
+      category: "Pre-Workout Nutrition",
+      items: [
+        { name: "Timing", amount: "1-4 hours", unit: "before exercise", icon: "⏰" },
+        { name: "Carbs", amount: "1-4g", unit: "per kg body weight", icon: "🍌" },
+        { name: "Protein", amount: "15-25g", unit: "recommended", icon: "🥛" }
+      ]
     },
     {
-      id: 3,
-      title: "Maintenance Plan",
-      description: "Balanced nutrition for maintaining current weight",
-      calories: "1,800-2,200 cal/day",
-      duration: "Ongoing",
-      difficulty: "Beginner",
-      color: "#a4e2ec",
-      features: ["Flexible eating", "Balanced macros", "Cheat meals", "Easy recipes"]
+      category: "Post-Workout Nutrition",
+      items: [
+        { name: "Recovery Window", amount: "30-60 min", unit: "after exercise", icon: "⏱️" },
+        { name: "Carbs", amount: "1.0-1.2g", unit: "per kg body weight", icon: "🍇" },
+        { name: "Protein", amount: "20-25g", unit: "for muscle repair", icon: "🥚" }
+      ]
     }
   ];
 
+  const mealPlans = [
+    {
+      title: "Endurance Athlete Plan",
+      calories: "2800-3200 kcal",
+      description: "High-carb plan for distance runners and cyclists",
+      meals: ["Oatmeal & Berries", "Quinoa Bowl", "Pasta & Protein", "Recovery Smoothie"]
+    },
+    {
+      title: "Strength Training Plan",
+      calories: "2400-2800 kcal",
+      description: "Protein-focused plan for muscle building",
+      meals: ["Egg & Avocado Toast", "Chicken Salad", "Lean Beef & Vegetables", "Greek Yogurt"]
+    },
+    {
+      title: "Weight Loss Plan",
+      calories: "1800-2200 kcal",
+      description: "Balanced deficit plan with adequate protein",
+      meals: ["Green Smoothie", "Turkey Wrap", "Salmon & Quinoa", "Mixed Nuts"]
+    }
+  ];
+
+  const hydrationTips = [
+    { tip: "Drink 500-600ml water 2-3 hours before exercise", icon: "💧" },
+    { tip: "Consume 200-300ml every 10-20 minutes during exercise", icon: "🏃" },
+    { tip: "Replace 150% of fluid lost through sweat post-exercise", icon: "⚖️" },
+    { tip: "Monitor urine color - aim for pale yellow", icon: "🟡" }
+  ];
+
   return (
-    <div className="flex justify-center w-full bg-transparent">
-      <Card className="relative w-[390px] h-[844px] rounded-[25px] overflow-hidden border-none">
-        <div className="absolute w-full h-full bg-[#4a6bda] rounded-[25px] overflow-hidden">
-          {/* Header */}
-          <div className="absolute top-0 left-0 w-full h-[140px] bg-[#8fd4e8] rounded-t-[25px]">
-            <Button
-              onClick={() => setLocation("/dashboard")}
-              variant="ghost"
-              size="icon"
-              className="absolute left-4 top-[60px] text-white hover:bg-white/10"
-            >
-              <ArrowLeft className="h-6 w-6" />
-            </Button>
-            
-            <h1 className="absolute left-1/2 top-[60px] transform -translate-x-1/2 text-white text-[24px] font-semibold">
-              Nutrition Plans
-            </h1>
-            
-            <div className="absolute right-4 top-[50px] text-white text-center">
-              <img
-                src="/figmaAssets/component-3.svg"
-                alt="Nutrition"
-                className="w-[40px] h-[40px] mx-auto"
-              />
-            </div>
+    <div className="min-h-screen bg-white">
+      <div className="max-w-md mx-auto relative pb-20">
+        <div className="flex justify-between items-center px-4 py-2">
+          <div className="text-black text-[14px] font-medium">19:09</div>
+          <div className="flex space-x-1">
+            <div className="w-1 h-1 bg-black rounded-full"></div>
+            <div className="w-1 h-1 bg-black rounded-full"></div>
+            <div className="w-1 h-1 bg-black rounded-full"></div>
+            <div className="w-1 h-1 bg-black rounded-full"></div>
           </div>
+        </div>
 
-          {/* Content */}
-          <div className="absolute top-[150px] left-0 w-full px-4 pb-4" style={{ height: 'calc(100% - 150px)', overflowY: 'auto' }}>
-            <div className="space-y-4">
-              {nutritionPlans.map((plan) => (
-                <div 
-                  key={plan.id}
-                  className={`bg-white rounded-[20px] p-5 shadow-sm transition-all duration-300 ${
-                    selectedPlan === plan.id ? 'ring-2 ring-blue-400 scale-105' : ''
-                  }`}
-                >
-                  <div className="flex items-start justify-between mb-3">
-                    <div className="flex-1">
-                      <h3 className="text-[#4a6bda] text-[20px] font-semibold mb-2">
-                        {plan.title}
-                      </h3>
-                      <p className="text-[#707070] text-[14px] leading-relaxed mb-4">
-                        {plan.description}
-                      </p>
-                    </div>
-                    
-                    <div 
-                      className="w-[50px] h-[50px] rounded-full flex items-center justify-center ml-3"
-                      style={{ backgroundColor: plan.color }}
-                    >
-                      <Target className="h-6 w-6 text-white" />
-                    </div>
-                  </div>
+        <div className="flex items-center px-4 py-4">
+          <Button
+            onClick={() => setLocation("/resources")}
+            variant="ghost"
+            className="text-[#70c1e4] hover:bg-[#70c1e4]/10"
+          >
+            ← Back
+          </Button>
+        </div>
 
-                  {/* Plan Details */}
-                  <div className="grid grid-cols-3 gap-3 mb-4">
-                    <div className="text-center p-2 bg-gray-50 rounded-[10px]">
-                      <Target className="h-4 w-4 mx-auto mb-1 text-[#4a6bda]" />
-                      <div className="text-[12px] font-medium text-[#4a6bda]">{plan.calories}</div>
-                    </div>
-                    
-                    <div className="text-center p-2 bg-gray-50 rounded-[10px]">
-                      <Clock className="h-4 w-4 mx-auto mb-1 text-[#4a6bda]" />
-                      <div className="text-[12px] font-medium text-[#4a6bda]">{plan.duration}</div>
-                    </div>
-                    
-                    <div className="text-center p-2 bg-gray-50 rounded-[10px]">
-                      <Users className="h-4 w-4 mx-auto mb-1 text-[#4a6bda]" />
-                      <div className="text-[12px] font-medium text-[#4a6bda]">{plan.difficulty}</div>
-                    </div>
-                  </div>
+        <div className="flex justify-center mb-8">
+          <div className="w-[80px] h-[80px] bg-[#70c1e4] rounded-full flex items-center justify-center">
+            <div className="text-white text-[24px]">🍎</div>
+          </div>
+        </div>
 
-                  {/* Features */}
-                  <div className="mb-4">
-                    <h4 className="text-[#4a6bda] text-[14px] font-medium mb-2">Includes:</h4>
-                    <div className="flex flex-wrap gap-2">
-                      {plan.features.map((feature, index) => (
-                        <span 
-                          key={index}
-                          className="px-2 py-1 bg-blue-50 text-[#4a6bda] text-[12px] rounded-[8px] font-medium"
-                        >
-                          {feature}
+        <div className="px-8">
+          <h1 className="text-[24px] font-semibold text-center mb-8 text-[#70c1e4]">Nutrition Information</h1>
+          
+          <div className="space-y-6">
+            {nutritionInfo.map((category, categoryIndex) => (
+              <div key={categoryIndex} className="bg-[#f8f9fa] rounded-[20px] p-4">
+                <h3 className="text-[16px] font-medium text-[#70c1e4] mb-4">{category.category}</h3>
+                <div className="space-y-3">
+                  {category.items.map((item, itemIndex) => (
+                    <div key={itemIndex} className="flex items-center justify-between">
+                      <div className="flex items-center space-x-3">
+                        <div className="text-[20px]">{item.icon}</div>
+                        <div>
+                          <div className="text-[14px] font-medium text-gray-700">{item.name}</div>
+                          <div className="text-[12px] text-gray-500">{item.unit}</div>
+                        </div>
+                      </div>
+                      <div className="text-[14px] font-medium text-[#70c1e4]">{item.amount}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+
+            <div className="bg-[#f8f9fa] rounded-[20px] p-4">
+              <h3 className="text-[16px] font-medium text-[#70c1e4] mb-4">Sample Meal Plans</h3>
+              <div className="space-y-3">
+                {mealPlans.map((plan, index) => (
+                  <div key={index} className="bg-white rounded-[15px] p-4 shadow-sm">
+                    <div className="flex justify-between items-start mb-2">
+                      <h4 className="text-[15px] font-medium text-gray-800">{plan.title}</h4>
+                      <span className="text-[12px] text-[#70c1e4] font-medium">{plan.calories}</span>
+                    </div>
+                    <p className="text-[13px] text-gray-600 mb-3">{plan.description}</p>
+                    <div className="flex flex-wrap gap-1">
+                      {plan.meals.map((meal, idx) => (
+                        <span key={idx} className="text-[11px] bg-gray-100 px-2 py-1 rounded-full text-gray-600">
+                          {meal}
                         </span>
                       ))}
                     </div>
                   </div>
-
-                  {/* Action Buttons */}
-                  <div className="flex gap-2">
-                    <Button
-                      onClick={() => setSelectedPlan(selectedPlan === plan.id ? null : plan.id)}
-                      variant="outline"
-                      className="flex-1 h-[35px] rounded-[15px] border-2"
-                      style={{ 
-                        borderColor: plan.color,
-                        color: selectedPlan === plan.id ? 'white' : plan.color,
-                        backgroundColor: selectedPlan === plan.id ? plan.color : 'transparent'
-                      }}
-                    >
-                      {selectedPlan === plan.id ? 'Selected' : 'Select Plan'}
-                    </Button>
-                    
-                    <Button
-                      className="h-[35px] px-4 rounded-[15px] text-white text-[14px] font-medium"
-                      style={{ backgroundColor: plan.color }}
-                    >
-                      View Details
-                    </Button>
-                  </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
 
-            {/* Start Button */}
-            {selectedPlan && (
-              <div className="mt-6 p-4 bg-white rounded-[20px] shadow-sm">
+            <div className="bg-[#f8f9fa] rounded-[20px] p-4">
+              <h3 className="text-[16px] font-medium text-[#70c1e4] mb-4">Hydration Guidelines</h3>
+              <div className="space-y-3">
+                {hydrationTips.map((tip, index) => (
+                  <div key={index} className="flex items-start space-x-3">
+                    <div className="text-[16px] mt-1">{tip.icon}</div>
+                    <p className="text-[13px] text-gray-700 flex-1">{tip.tip}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="bg-[#f8f9fa] rounded-[20px] p-4">
+              <h3 className="text-[16px] font-medium text-[#70c1e4] mb-3">Tools & Calculators</h3>
+              <div className="grid grid-cols-2 gap-3">
                 <Button
-                  onClick={() => {
-                    // Navigate to selected plan details or start plan
-                    setLocation("/dashboard");
-                  }}
-                  className="w-full h-[45px] rounded-[20px] bg-[#4a6bda] hover:bg-[#3a5bca] text-white text-[16px] font-medium"
+                  variant="outline"
+                  className="h-[35px] rounded-[17px] border-[#70c1e4] text-[#70c1e4] text-[12px]"
                 >
-                  Start Selected Plan
+                  🧮 BMR Calculator
+                </Button>
+                <Button
+                  variant="outline"
+                  className="h-[35px] rounded-[17px] border-[#70c1e4] text-[#70c1e4] text-[12px]"
+                >
+                  📊 Macro Calculator
+                </Button>
+                <Button
+                  variant="outline"
+                  className="h-[35px] rounded-[17px] border-[#70c1e4] text-[#70c1e4] text-[12px]"
+                >
+                  💧 Hydration Tracker
+                </Button>
+                <Button
+                  variant="outline"
+                  className="h-[35px] rounded-[17px] border-[#70c1e4] text-[#70c1e4] text-[12px]"
+                >
+                  🍽️ Meal Planner
                 </Button>
               </div>
-            )}
+            </div>
           </div>
         </div>
-      </Card>
+
+        <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200">
+          <div className="max-w-md mx-auto">
+            <div className="flex justify-around py-2">
+              <button onClick={() => setLocation("/dashboard")} className="flex flex-col items-center py-2 px-4">
+                <div className="w-6 h-6 mb-1">🏠</div>
+                <span className="text-[10px] text-gray-600">Home</span>
+              </button>
+              <button onClick={() => setLocation("/account")} className="flex flex-col items-center py-2 px-4">
+                <div className="w-6 h-6 mb-1">👤</div>
+                <span className="text-[10px] text-gray-600">Account</span>
+              </button>
+              <button onClick={() => setLocation("/activity")} className="flex flex-col items-center py-2 px-4">
+                <div className="w-6 h-6 mb-1">📊</div>
+                <span className="text-[10px] text-gray-600">Activity</span>
+              </button>
+              <button onClick={() => setLocation("/resources")} className="flex flex-col items-center py-2 px-4">
+                <div className="w-6 h-6 mb-1">📚</div>
+                <span className="text-[10px] text-[#70c1e4] font-medium">Resources</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
