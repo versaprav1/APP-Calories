@@ -5,6 +5,33 @@ import { useLocation } from "wouter";
 export default function Dashboard() {
   const [, setLocation] = useLocation();
 
+  const activities = [
+    {
+      id: 1,
+      title: "Food Tracking",
+      description: "Monitor your daily food intake and calories",
+      icon: "/figmaAssets/component-2.svg",
+      color: "#70c1e4",
+      route: "/food-tracking"
+    },
+    {
+      id: 2,
+      title: "Nutrition Plans",
+      description: "Customize meal plans and nutritional goals",
+      icon: "/figmaAssets/component-3.svg", 
+      color: "#8fd4e8",
+      route: "/nutrition-plans"
+    },
+    {
+      id: 3,
+      title: "Fitness Goals",
+      description: "Set and track your fitness achievements",
+      icon: "/figmaAssets/component-4.svg",
+      color: "#a4e2ec",
+      route: "/fitness-goals"
+    }
+  ];
+
   return (
     <div className="flex justify-center w-full bg-transparent">
       <Card className="relative w-[390px] h-[844px] rounded-[25px] overflow-hidden border-none">
@@ -28,39 +55,92 @@ export default function Dashboard() {
           {/* Time */}
           <div className="absolute w-[90px] h-[30px] top-1 left-0">
             <div className="relative h-[30px]">
-              <div className="absolute w-[90px] h-[30px] -top-px left-0 font-normal text-[10.5px] text-center tracking-[0] leading-normal">
+              <div className="absolute w-[90px] h-[30px] -top-px left-0 font-normal text-[10.5px] text-center tracking-[0] leading-normal text-white">
                 19:09
               </div>
             </div>
           </div>
 
-          {/* Dashboard Content */}
-          <div className="absolute w-[350px] top-[200px] left-5">
-            <h1 className="text-white text-[32px] font-semibold text-center mb-8">
-              Welcome to Your Dashboard
+          {/* Welcome Section */}
+          <div className="absolute w-full top-[150px] px-6">
+            <h1 className="text-white text-[28px] font-semibold text-center mb-2">
+              Welcome Back!
             </h1>
-            
-            <div className="bg-white/10 rounded-[25px] p-6 mb-6">
-              <h2 className="text-white text-[24px] font-medium mb-4">
-                Calorie Control Features
-              </h2>
-              <p className="text-white/80 text-[16px] leading-relaxed">
-                Track your daily calorie intake, monitor your nutrition goals, and maintain a healthy lifestyle with our comprehensive calorie management system.
-              </p>
+            <p className="text-white/80 text-[16px] text-center mb-8">
+              Choose your health activity
+            </p>
+
+            {/* Triathlon Activity Options */}
+            <div className="space-y-4">
+              {activities.map((activity, index) => (
+                <div 
+                  key={activity.id}
+                  className="bg-white/95 rounded-[20px] p-4 shadow-lg transform hover:scale-105 transition-all duration-300"
+                  style={{ animationDelay: `${index * 0.1}s` }}
+                >
+                  <div className="flex items-center space-x-4">
+                    <div 
+                      className="w-[60px] h-[60px] rounded-full flex items-center justify-center"
+                      style={{ backgroundColor: activity.color }}
+                    >
+                      <img
+                        src={activity.icon}
+                        alt={activity.title}
+                        className="w-[40px] h-[40px]"
+                      />
+                    </div>
+                    
+                    <div className="flex-1">
+                      <h3 className="text-[#4a6bda] text-[18px] font-semibold mb-1">
+                        {activity.title}
+                      </h3>
+                      <p className="text-[#707070] text-[14px] leading-relaxed">
+                        {activity.description}
+                      </p>
+                    </div>
+                    
+                    <Button
+                      onClick={() => setLocation(activity.route)}
+                      className="w-[80px] h-[35px] rounded-[20px] text-[14px] font-medium"
+                      style={{ 
+                        backgroundColor: activity.color,
+                        color: "#4a6bda"
+                      }}
+                    >
+                      Start
+                    </Button>
+                  </div>
+                </div>
+              ))}
             </div>
 
-            <div className="flex flex-col items-center gap-4 pt-8">
-              <Button
-                onClick={() => setLocation("/calories")}
-                className="w-[200px] h-[50px] rounded-[100px] bg-[#70c1e4] hover:bg-[#5fb1d4] text-[#707070] text-[18px] font-medium"
-              >
-                Start Tracking
-              </Button>
-              
+            {/* Stats Overview */}
+            <div className="mt-8 bg-white/10 rounded-[20px] p-4">
+              <h3 className="text-white text-[16px] font-medium mb-3 text-center">
+                Today's Progress
+              </h3>
+              <div className="flex justify-around">
+                <div className="text-center">
+                  <div className="text-white text-[20px] font-bold">1,250</div>
+                  <div className="text-white/70 text-[12px]">Calories</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-white text-[20px] font-bold">65g</div>
+                  <div className="text-white/70 text-[12px]">Protein</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-white text-[20px] font-bold">2.1km</div>
+                  <div className="text-white/70 text-[12px]">Distance</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Logout Button */}
+            <div className="mt-6 flex justify-center">
               <Button
                 variant="outline"
                 onClick={() => setLocation("/")}
-                className="w-[200px] h-[50px] rounded-[100px] bg-white border-[#0679ab] text-[#0679ab] text-[18px] font-medium hover:bg-gray-50"
+                className="w-[140px] h-[40px] rounded-[25px] bg-white/10 border-white/30 text-white text-[14px] font-medium hover:bg-white/20"
               >
                 Logout
               </Button>

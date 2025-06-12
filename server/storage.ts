@@ -1,4 +1,4 @@
-import { users, type User, type InsertUser } from "@shared/schema";
+import { users, foodEntries, type User, type InsertUser, type FoodEntry, type InsertFoodEntry } from "@shared/schema";
 import { db } from "./db";
 import { eq } from "drizzle-orm";
 
@@ -6,6 +6,9 @@ export interface IStorage {
   getUser(id: number): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
+  getFoodEntries(userId: number): Promise<FoodEntry[]>;
+  createFoodEntry(foodEntry: InsertFoodEntry): Promise<FoodEntry>;
+  deleteFoodEntry(id: number): Promise<void>;
 }
 
 export class DatabaseStorage implements IStorage {

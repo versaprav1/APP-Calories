@@ -10,6 +10,9 @@ import Onboarding from "@/pages/Onboarding";
 import Register from "@/pages/Register";
 import Login from "@/pages/Login";
 import Dashboard from "@/pages/Dashboard";
+import FoodTracking from "@/pages/FoodTracking";
+import NutritionPlans from "@/pages/NutritionPlans";
+import FitnessGoals from "@/pages/FitnessGoals";
 
 function Router() {
   return (
@@ -20,6 +23,9 @@ function Router() {
       <Route path="/login" component={Login} />
       <Route path="/dashboard" component={Dashboard} />
       <Route path="/calories" component={Calories} />
+      <Route path="/food-tracking" component={FoodTracking} />
+      <Route path="/nutrition-plans" component={NutritionPlans} />
+      <Route path="/fitness-goals" component={FitnessGoals} />
       {/* Fallback to 404 */}
       <Route component={NotFound} />
     </Switch>
