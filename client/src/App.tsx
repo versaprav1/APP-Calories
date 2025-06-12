@@ -42,6 +42,10 @@ import HealthArticles from "@/pages/HealthArticles";
 import VideoTutorials from "@/pages/VideoTutorials";
 import MealPlans from "@/pages/MealPlans";
 import ExerciseLibrary from "@/pages/ExerciseLibrary";
+import FirstRunSetup from "@/pages/FirstRunSetup";
+import WorkoutSetup from "@/pages/WorkoutSetup";
+import CalorieLogging from "@/pages/CalorieLogging";
+import CalorieIntro from "@/pages/CalorieIntro";
 
 function Router() {
   return (
@@ -85,6 +89,10 @@ function Router() {
       <Route path="/video-tutorials" component={VideoTutorials} />
       <Route path="/meal-plans" component={MealPlans} />
       <Route path="/exercise-library" component={ExerciseLibrary} />
+      <Route path="/first-run-setup" component={FirstRunSetup} />
+      <Route path="/workout-setup" component={WorkoutSetup} />
+      <Route path="/calorie-logging" component={CalorieLogging} />
+      <Route path="/calorie-intro" component={CalorieIntro} />
       {/* Fallback to 404 */}
       <Route component={NotFound} />
     </Switch>

@@ -24,7 +24,7 @@ export default function Register() {
         title: "Account created successfully!",
         description: "Please complete your profile setup.",
       });
-      setLocation("/profile-setup");
+      setLocation("/first-run-setup");
     },
     onError: (error: any) => {
       toast({
