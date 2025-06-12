@@ -16,6 +16,7 @@ import FitnessGoals from "@/pages/FitnessGoals";
 import Swimming from "@/pages/Swimming";
 import Cycling from "@/pages/Cycling";
 import Running from "@/pages/Running";
+import Badminton from "@/pages/Badminton";
 import CalorieControl from "@/pages/CalorieControl";
 import WeightControl from "@/pages/WeightControl";
 
@@ -34,6 +35,7 @@ function Router() {
       <Route path="/swimming" component={Swimming} />
       <Route path="/cycling" component={Cycling} />
       <Route path="/running" component={Running} />
+      <Route path="/badminton" component={Badminton} />
       <Route path="/calorie-control" component={CalorieControl} />
       <Route path="/weight-control" component={WeightControl} />
       {/* Fallback to 404 */}

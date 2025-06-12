@@ -31,6 +31,15 @@ export default function Dashboard() {
       color: "#a4e2ec",
       route: "/running",
       status: "Complete"
+    },
+    {
+      id: 4,
+      title: "Badminton",
+      description: "Track your badminton matches and skills",
+      icon: "🏸",
+      color: "#b8d4f0",
+      route: "/badminton",
+      status: "Ready"
     }
   ];
 
