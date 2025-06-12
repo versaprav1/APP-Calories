@@ -88,11 +88,15 @@ export const Calories = (): JSX.Element => {
 
           {/* Buttons */}
           <div className="absolute flex flex-col items-center gap-5 bottom-[22px] left-1/2 transform -translate-x-1/2">
-            <Button className="w-[180px] h-[50px] rounded-[100px] bg-[#70c1e4] hover:bg-[#5fb1d4] text-[#707070] text-[22px] font-medium">
+            <Button 
+              onClick={() => setLocation("/register")}
+              className="w-[180px] h-[50px] rounded-[100px] bg-[#70c1e4] hover:bg-[#5fb1d4] text-[#707070] text-[22px] font-medium"
+            >
               Create Account
             </Button>
 
             <Button
+              onClick={() => setLocation("/login")}
               variant="outline"
               className="w-[180px] h-[50px] rounded-[100px] bg-white border-[#0679ab] text-[#0679ab] text-[22px] font-medium hover:bg-gray-50"
             >
