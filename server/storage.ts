@@ -29,6 +29,23 @@ export class DatabaseStorage implements IStorage {
       .returning();
     return user;
   }
+
+  async getFoodEntries(userId: number): Promise<FoodEntry[]> {
+    const entries = await db.select().from(foodEntries).where(eq(foodEntries.userId, userId));
+    return entries;
+  }
+
+  async createFoodEntry(insertFoodEntry: InsertFoodEntry): Promise<FoodEntry> {
+    const [entry] = await db
+      .insert(foodEntries)
+      .values(insertFoodEntry)
+      .returning();
+    return entry;
+  }
+
+  async deleteFoodEntry(id: number): Promise<void> {
+    await db.delete(foodEntries).where(eq(foodEntries.id, id));
+  }
 }
 
 export const storage = new DatabaseStorage();
