@@ -29,19 +29,82 @@ export default function Activity() {
           <h1 className="text-[24px] font-semibold text-center mb-8 text-[#70c1e4]">Activity Dashboard</h1>
           
           <div className="space-y-4">
-            <div className="bg-[#f8f9fa] rounded-[20px] p-4">
-              <h3 className="text-[16px] font-medium text-[#70c1e4] mb-2">Today's Activities</h3>
-              <p className="text-[14px] text-gray-600">Track your daily progress</p>
+            <div 
+              onClick={() => setLocation("/daily-activities")}
+              className="bg-[#f8f9fa] rounded-[20px] p-4 hover:bg-[#e9ecef] transition-colors cursor-pointer"
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-[16px] font-medium text-[#70c1e4] mb-2">Today's Activities</h3>
+                  <p className="text-[14px] text-gray-600">Track your daily progress</p>
+                </div>
+                <div className="text-[#70c1e4]">→</div>
+              </div>
             </div>
             
-            <div className="bg-[#f8f9fa] rounded-[20px] p-4">
-              <h3 className="text-[16px] font-medium text-[#70c1e4] mb-2">Weekly Summary</h3>
-              <p className="text-[14px] text-gray-600">View your week's achievements</p>
+            <div 
+              onClick={() => setLocation("/weekly-summary")}
+              className="bg-[#f8f9fa] rounded-[20px] p-4 hover:bg-[#e9ecef] transition-colors cursor-pointer"
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-[16px] font-medium text-[#70c1e4] mb-2">Weekly Summary</h3>
+                  <p className="text-[14px] text-gray-600">View your week's achievements</p>
+                </div>
+                <div className="text-[#70c1e4]">→</div>
+              </div>
             </div>
             
-            <div className="bg-[#f8f9fa] rounded-[20px] p-4">
-              <h3 className="text-[16px] font-medium text-[#70c1e4] mb-2">Goals Progress</h3>
-              <p className="text-[14px] text-gray-600">Monitor your fitness goals</p>
+            <div 
+              onClick={() => setLocation("/goals-progress")}
+              className="bg-[#f8f9fa] rounded-[20px] p-4 hover:bg-[#e9ecef] transition-colors cursor-pointer"
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-[16px] font-medium text-[#70c1e4] mb-2">Goals Progress</h3>
+                  <p className="text-[14px] text-gray-600">Monitor your fitness goals</p>
+                </div>
+                <div className="text-[#70c1e4]">→</div>
+              </div>
+            </div>
+
+            <div 
+              onClick={() => setLocation("/workout-history")}
+              className="bg-[#f8f9fa] rounded-[20px] p-4 hover:bg-[#e9ecef] transition-colors cursor-pointer"
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-[16px] font-medium text-[#70c1e4] mb-2">Workout History</h3>
+                  <p className="text-[14px] text-gray-600">Review past training sessions</p>
+                </div>
+                <div className="text-[#70c1e4]">→</div>
+              </div>
+            </div>
+
+            <div 
+              onClick={() => setLocation("/performance-analytics")}
+              className="bg-[#f8f9fa] rounded-[20px] p-4 hover:bg-[#e9ecef] transition-colors cursor-pointer"
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-[16px] font-medium text-[#70c1e4] mb-2">Performance Analytics</h3>
+                  <p className="text-[14px] text-gray-600">Detailed performance insights</p>
+                </div>
+                <div className="text-[#70c1e4]">→</div>
+              </div>
+            </div>
+
+            <div 
+              onClick={() => setLocation("/activity-settings")}
+              className="bg-[#f8f9fa] rounded-[20px] p-4 hover:bg-[#e9ecef] transition-colors cursor-pointer"
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-[16px] font-medium text-[#70c1e4] mb-2">Activity Settings</h3>
+                  <p className="text-[14px] text-gray-600">Configure tracking preferences</p>
+                </div>
+                <div className="text-[#70c1e4]">→</div>
+              </div>
             </div>
           </div>
         </div>

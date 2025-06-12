@@ -29,24 +29,82 @@ export default function Resources() {
           <h1 className="text-[24px] font-semibold text-center mb-8 text-[#70c1e4]">Resources</h1>
           
           <div className="space-y-4">
-            <div className="bg-[#f8f9fa] rounded-[20px] p-4">
-              <h3 className="text-[16px] font-medium text-[#70c1e4] mb-2">Training Guides</h3>
-              <p className="text-[14px] text-gray-600">Access workout routines and training plans</p>
+            <div 
+              onClick={() => setLocation("/training-guides")}
+              className="bg-[#f8f9fa] rounded-[20px] p-4 hover:bg-[#e9ecef] transition-colors cursor-pointer"
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-[16px] font-medium text-[#70c1e4] mb-2">Training Guides</h3>
+                  <p className="text-[14px] text-gray-600">Access workout routines and training plans</p>
+                </div>
+                <div className="text-[#70c1e4]">→</div>
+              </div>
             </div>
             
-            <div className="bg-[#f8f9fa] rounded-[20px] p-4">
-              <h3 className="text-[16px] font-medium text-[#70c1e4] mb-2">Nutrition Information</h3>
-              <p className="text-[14px] text-gray-600">Learn about healthy eating and meal planning</p>
+            <div 
+              onClick={() => setLocation("/nutrition-information")}
+              className="bg-[#f8f9fa] rounded-[20px] p-4 hover:bg-[#e9ecef] transition-colors cursor-pointer"
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-[16px] font-medium text-[#70c1e4] mb-2">Nutrition Information</h3>
+                  <p className="text-[14px] text-gray-600">Learn about healthy eating and meal planning</p>
+                </div>
+                <div className="text-[#70c1e4]">→</div>
+              </div>
             </div>
             
-            <div className="bg-[#f8f9fa] rounded-[20px] p-4">
-              <h3 className="text-[16px] font-medium text-[#70c1e4] mb-2">Health Articles</h3>
-              <p className="text-[14px] text-gray-600">Read latest health and wellness tips</p>
+            <div 
+              onClick={() => setLocation("/health-articles")}
+              className="bg-[#f8f9fa] rounded-[20px] p-4 hover:bg-[#e9ecef] transition-colors cursor-pointer"
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-[16px] font-medium text-[#70c1e4] mb-2">Health Articles</h3>
+                  <p className="text-[14px] text-gray-600">Read latest health and wellness tips</p>
+                </div>
+                <div className="text-[#70c1e4]">→</div>
+              </div>
             </div>
             
-            <div className="bg-[#f8f9fa] rounded-[20px] p-4">
-              <h3 className="text-[16px] font-medium text-[#70c1e4] mb-2">Video Tutorials</h3>
-              <p className="text-[14px] text-gray-600">Watch exercise demonstrations and form guides</p>
+            <div 
+              onClick={() => setLocation("/video-tutorials")}
+              className="bg-[#f8f9fa] rounded-[20px] p-4 hover:bg-[#e9ecef] transition-colors cursor-pointer"
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-[16px] font-medium text-[#70c1e4] mb-2">Video Tutorials</h3>
+                  <p className="text-[14px] text-gray-600">Watch exercise demonstrations and form guides</p>
+                </div>
+                <div className="text-[#70c1e4]">→</div>
+              </div>
+            </div>
+
+            <div 
+              onClick={() => setLocation("/meal-plans")}
+              className="bg-[#f8f9fa] rounded-[20px] p-4 hover:bg-[#e9ecef] transition-colors cursor-pointer"
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-[16px] font-medium text-[#70c1e4] mb-2">Meal Plans</h3>
+                  <p className="text-[14px] text-gray-600">Discover personalized nutrition plans</p>
+                </div>
+                <div className="text-[#70c1e4]">→</div>
+              </div>
+            </div>
+
+            <div 
+              onClick={() => setLocation("/exercise-library")}
+              className="bg-[#f8f9fa] rounded-[20px] p-4 hover:bg-[#e9ecef] transition-colors cursor-pointer"
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-[16px] font-medium text-[#70c1e4] mb-2">Exercise Library</h3>
+                  <p className="text-[14px] text-gray-600">Browse comprehensive exercise database</p>
+                </div>
+                <div className="text-[#70c1e4]">→</div>
+              </div>
             </div>
           </div>
         </div>
