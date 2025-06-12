@@ -22,9 +22,9 @@ export default function Register() {
     onSuccess: () => {
       toast({
         title: "Account created successfully!",
-        description: "You can now log in with your credentials.",
+        description: "Please complete your profile setup.",
       });
-      setLocation("/login");
+      setLocation("/profile-setup");
     },
     onError: (error: any) => {
       toast({

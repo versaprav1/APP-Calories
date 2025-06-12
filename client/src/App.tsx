@@ -19,6 +19,10 @@ import Running from "@/pages/Running";
 import Badminton from "@/pages/Badminton";
 import CalorieControl from "@/pages/CalorieControl";
 import WeightControl from "@/pages/WeightControl";
+import ProfileSetup from "@/pages/ProfileSetup";
+import Account from "@/pages/Account";
+import Activity from "@/pages/Activity";
+import Resources from "@/pages/Resources";
 
 function Router() {
   return (
@@ -38,6 +42,10 @@ function Router() {
       <Route path="/badminton" component={Badminton} />
       <Route path="/calorie-control" component={CalorieControl} />
       <Route path="/weight-control" component={WeightControl} />
+      <Route path="/profile-setup" component={ProfileSetup} />
+      <Route path="/account" component={Account} />
+      <Route path="/activity" component={Activity} />
+      <Route path="/resources" component={Resources} />
       {/* Fallback to 404 */}
       <Route component={NotFound} />
     </Switch>

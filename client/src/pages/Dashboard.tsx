@@ -228,7 +228,7 @@ export default function Dashboard() {
         </div>
 
         {/* Logout */}
-        <div className="flex justify-center pb-4">
+        <div className="flex justify-center pb-20">
           <Button
             variant="outline"
             onClick={() => setLocation("/")}
@@ -236,6 +236,45 @@ export default function Dashboard() {
           >
             Logout
           </Button>
+        </div>
+
+        {/* Bottom Navigation */}
+        <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200">
+          <div className="max-w-md mx-auto">
+            <div className="flex justify-around py-2">
+              <button 
+                onClick={() => setLocation("/dashboard")}
+                className="flex flex-col items-center py-2 px-4"
+              >
+                <div className="w-6 h-6 mb-1">🏠</div>
+                <span className="text-[10px] text-[#70c1e4] font-medium">Home</span>
+              </button>
+              
+              <button 
+                onClick={() => setLocation("/account")}
+                className="flex flex-col items-center py-2 px-4"
+              >
+                <div className="w-6 h-6 mb-1">👤</div>
+                <span className="text-[10px] text-gray-600">Account</span>
+              </button>
+              
+              <button 
+                onClick={() => setLocation("/activity")}
+                className="flex flex-col items-center py-2 px-4"
+              >
+                <div className="w-6 h-6 mb-1">📊</div>
+                <span className="text-[10px] text-gray-600">Activity</span>
+              </button>
+              
+              <button 
+                onClick={() => setLocation("/resources")}
+                className="flex flex-col items-center py-2 px-4"
+              >
+                <div className="w-6 h-6 mb-1">📚</div>
+                <span className="text-[10px] text-gray-600">Resources</span>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
