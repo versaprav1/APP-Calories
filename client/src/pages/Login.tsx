@@ -78,9 +78,15 @@ export default function Login() {
 
           {/* Login Form */}
           <div className="absolute w-[350px] top-[200px] left-5">
-            <h1 className="text-white text-[32px] font-semibold text-center mb-8">
+            <h1 className="text-white text-[32px] font-semibold text-center mb-4">
               Login
             </h1>
+            
+            <div className="bg-white/10 rounded-[15px] p-3 mb-6">
+              <p className="text-white text-[12px] text-center">
+                Demo Account: Username: <strong>Praveen</strong> | Password: <strong>1234</strong>
+              </p>
+            </div>
             
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-2">
