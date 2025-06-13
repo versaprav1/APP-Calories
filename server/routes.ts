@@ -1,7 +1,17 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertUserSchema, insertFoodEntrySchema } from "../shared/schema";
+import { 
+  insertUserSchema, 
+  insertFoodEntrySchema,
+  updateUserProfileSchema,
+  insertSwimmingWorkoutSchema,
+  insertCyclingWorkoutSchema,
+  insertRunningWorkoutSchema,
+  insertBadmintonSessionSchema,
+  insertUserGoalSchema,
+  insertWeightEntrySchema
+} from "../shared/schema";
 import { z } from "zod";
 
 export async function registerRoutes(app: Express): Promise<Server> {
