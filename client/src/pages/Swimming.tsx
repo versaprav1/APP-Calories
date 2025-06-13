@@ -4,32 +4,127 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { ArrowLeft, Waves, Clock, Target, TrendingUp } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useToast } from "@/hooks/use-toast";
+import { ArrowLeft, Waves, Clock, Target, TrendingUp, Plus, Trash2 } from "lucide-react";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { apiRequest, queryClient } from "@/lib/queryClient";
+import type { SwimmingWorkout, InsertSwimmingWorkout } from "@shared/schema";
 
 export default function Swimming() {
   const [, setLocation] = useLocation();
+  const { toast } = useToast();
+  const [showAddForm, setShowAddForm] = useState(false);
   const [distance, setDistance] = useState("");
   const [duration, setDuration] = useState("");
-  const [style, setStyle] = useState("freestyle");
+  const [strokes, setStrokes] = useState("");
+  const [poolLength, setPoolLength] = useState("25");
+  const [strokeType, setStrokeType] = useState("freestyle");
+  const [calories, setCalories] = useState("");
+  const [notes, setNotes] = useState("");
 
-  const swimmingSessions = [
-    { date: "Today", distance: "1000m", duration: "25:30", style: "Freestyle", calories: 320 },
-    { date: "Yesterday", distance: "800m", duration: "22:15", style: "Backstroke", calories: 280 },
-    { date: "2 days ago", distance: "1200m", duration: "28:45", style: "Mixed", calories: 380 }
-  ];
+  const userId = 1; // Using demo user ID
+
+  // Fetch swimming workouts
+  const { data: workouts = [], isLoading } = useQuery<SwimmingWorkout[]>({
+    queryKey: ['/api/swimming-workouts', userId],
+  });
+
+  // Create workout mutation
+  const createWorkoutMutation = useMutation({
+    mutationFn: async (workout: InsertSwimmingWorkout) => {
+      return await apiRequest('/api/swimming-workouts', 'POST', workout);
+    },
+    onSuccess: () => {
+      toast({
+        title: "Success",
+        description: "Swimming workout added successfully!",
+      });
+      queryClient.invalidateQueries({ queryKey: ['/api/swimming-workouts', userId] });
+      resetForm();
+      setShowAddForm(false);
+    },
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description: "Failed to add swimming workout. Please try again.",
+        variant: "destructive",
+      });
+      console.error('Error creating workout:', error);
+    },
+  });
+
+  // Delete workout mutation
+  const deleteWorkoutMutation = useMutation({
+    mutationFn: async (workoutId: number) => {
+      return await apiRequest(`/api/swimming-workouts/${workoutId}`, 'DELETE');
+    },
+    onSuccess: () => {
+      toast({
+        title: "Success",
+        description: "Swimming workout deleted successfully!",
+      });
+      queryClient.invalidateQueries({ queryKey: ['/api/swimming-workouts', userId] });
+    },
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description: "Failed to delete swimming workout. Please try again.",
+        variant: "destructive",
+      });
+      console.error('Error deleting workout:', error);
+    },
+  });
+
+  const resetForm = () => {
+    setDistance("");
+    setDuration("");
+    setStrokes("");
+    setPoolLength("25");
+    setStrokeType("freestyle");
+    setCalories("");
+    setNotes("");
+  };
+
+  const handleSubmit = () => {
+    if (!distance || !duration) {
+      toast({
+        title: "Error",
+        description: "Please fill in distance and duration fields.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const workoutData: InsertSwimmingWorkout = {
+      userId,
+      distance: parseInt(distance),
+      duration: parseInt(duration),
+      strokes: strokes ? parseInt(strokes) : undefined,
+      poolLength: parseInt(poolLength),
+      strokeType,
+      calories: calories ? parseInt(calories) : undefined,
+      notes: notes || undefined,
+    };
+
+    createWorkoutMutation.mutate(workoutData);
+  };
 
   const swimmingStyles = [
-    { name: "freestyle", emoji: "🏊‍♂️", label: "Freestyle" },
-    { name: "backstroke", emoji: "🤽‍♂️", label: "Backstroke" },
-    { name: "breaststroke", emoji: "🏊‍♀️", label: "Breaststroke" },
-    { name: "butterfly", emoji: "🦋", label: "Butterfly" }
+    { value: "freestyle", label: "Freestyle", emoji: "🏊‍♂️" },
+    { value: "backstroke", label: "Backstroke", emoji: "🤽‍♂️" },
+    { value: "breaststroke", label: "Breaststroke", emoji: "🏊‍♀️" },
+    { value: "butterfly", label: "Butterfly", emoji: "🦋" },
+    { value: "mixed", label: "Mixed Styles", emoji: "🏊" }
   ];
 
+  // Calculate stats from real data
   const weeklyStats = {
-    totalDistance: 4200,
-    totalTime: "1h 45m",
-    avgPace: "2:15/100m",
-    sessions: 5
+    totalDistance: workouts.reduce((sum, workout) => sum + workout.distance, 0),
+    totalTime: Math.round(workouts.reduce((sum, workout) => sum + workout.duration, 0)),
+    sessions: workouts.length,
+    totalCalories: workouts.reduce((sum, workout) => sum + (workout.calories || 0), 0)
   };
 
   return (
@@ -74,103 +169,181 @@ export default function Swimming() {
               </div>
               <div className="bg-white/90 rounded-[12px] p-2 text-center">
                 <Clock className="h-4 w-4 mx-auto mb-1 text-[#4a6bda]" />
-                <div className="text-[14px] font-bold text-[#4a6bda]">{weeklyStats.totalTime}</div>
+                <div className="text-[14px] font-bold text-[#4a6bda]">{weeklyStats.totalTime}m</div>
                 <div className="text-[10px] text-[#707070]">Time</div>
               </div>
               <div className="bg-white/90 rounded-[12px] p-2 text-center">
                 <TrendingUp className="h-4 w-4 mx-auto mb-1 text-[#4a6bda]" />
-                <div className="text-[14px] font-bold text-[#4a6bda]">{weeklyStats.avgPace}</div>
-                <div className="text-[10px] text-[#707070]">Avg Pace</div>
+                <div className="text-[14px] font-bold text-[#4a6bda]">{weeklyStats.totalCalories}</div>
+                <div className="text-[10px] text-[#707070]">Calories</div>
               </div>
+            </div>
+
+            {/* Add Session Button */}
+            <div className="mb-4">
+              <Button
+                onClick={() => setShowAddForm(!showAddForm)}
+                className="w-full bg-white text-[#4a6bda] hover:bg-white/90 rounded-[15px] py-3"
+              >
+                <Plus className="h-5 w-5 mr-2" />
+                {showAddForm ? "Cancel" : "Add Swimming Session"}
+              </Button>
             </div>
 
             {/* Add Session Form */}
-            <div className="bg-white rounded-[20px] p-4 mb-4 shadow-sm">
-              <h2 className="text-[#4a6bda] text-[18px] font-semibold mb-4 flex items-center gap-2">
-                <Waves className="h-5 w-5" />
-                Log Swimming Session
-              </h2>
-              
-              <div className="space-y-3">
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <Label className="text-[#707070] text-[12px]">Distance (m)</Label>
-                    <Input
-                      type="number"
-                      value={distance}
-                      onChange={(e) => setDistance(e.target.value)}
-                      className="w-full h-[35px] rounded-[10px] text-[14px]"
-                      placeholder="1000"
-                    />
-                  </div>
-                  <div>
-                    <Label className="text-[#707070] text-[12px]">Duration (min)</Label>
-                    <Input
-                      type="text"
-                      value={duration}
-                      onChange={(e) => setDuration(e.target.value)}
-                      className="w-full h-[35px] rounded-[10px] text-[14px]"
-                      placeholder="25:30"
-                    />
-                  </div>
-                </div>
+            {showAddForm && (
+              <div className="bg-white rounded-[20px] p-4 mb-4 shadow-sm">
+                <h2 className="text-[#4a6bda] text-[18px] font-semibold mb-4 flex items-center gap-2">
+                  <Waves className="h-5 w-5" />
+                  Log Swimming Session
+                </h2>
                 
-                <div>
-                  <Label className="text-[#707070] text-[12px] mb-2 block">Swimming Style</Label>
-                  <div className="grid grid-cols-4 gap-2">
-                    {swimmingStyles.map((styleOption) => (
-                      <button
-                        key={styleOption.name}
-                        onClick={() => setStyle(styleOption.name)}
-                        className={`p-2 rounded-[10px] text-center transition-all ${
-                          style === styleOption.name 
-                            ? 'bg-[#70c1e4] text-white' 
-                            : 'bg-gray-100 text-[#707070]'
-                        }`}
-                      >
-                        <div className="text-[16px] mb-1">{styleOption.emoji}</div>
-                        <div className="text-[10px]">{styleOption.label}</div>
-                      </button>
-                    ))}
+                <div className="space-y-3">
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <Label className="text-[#707070] text-[12px]">Distance (m)</Label>
+                      <Input
+                        type="number"
+                        value={distance}
+                        onChange={(e) => setDistance(e.target.value)}
+                        placeholder="1000"
+                        className="h-10 rounded-[10px] border-gray-200"
+                      />
+                    </div>
+                    <div>
+                      <Label className="text-[#707070] text-[12px]">Duration (min)</Label>
+                      <Input
+                        type="number"
+                        value={duration}
+                        onChange={(e) => setDuration(e.target.value)}
+                        placeholder="30"
+                        className="h-10 rounded-[10px] border-gray-200"
+                      />
+                    </div>
                   </div>
-                </div>
 
-                <Button
-                  className="w-full h-[35px] rounded-[15px] bg-[#70c1e4] hover:bg-[#5fb1d4] text-white text-[14px] font-medium"
-                >
-                  Save Session
-                </Button>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <Label className="text-[#707070] text-[12px]">Stroke Style</Label>
+                      <Select value={strokeType} onValueChange={setStrokeType}>
+                        <SelectTrigger className="h-10 rounded-[10px] border-gray-200">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {swimmingStyles.map((style) => (
+                            <SelectItem key={style.value} value={style.value}>
+                              {style.emoji} {style.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div>
+                      <Label className="text-[#707070] text-[12px]">Pool Length (m)</Label>
+                      <Select value={poolLength} onValueChange={setPoolLength}>
+                        <SelectTrigger className="h-10 rounded-[10px] border-gray-200">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="25">25m</SelectItem>
+                          <SelectItem value="50">50m</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <Label className="text-[#707070] text-[12px]">Strokes (optional)</Label>
+                      <Input
+                        type="number"
+                        value={strokes}
+                        onChange={(e) => setStrokes(e.target.value)}
+                        placeholder="800"
+                        className="h-10 rounded-[10px] border-gray-200"
+                      />
+                    </div>
+                    <div>
+                      <Label className="text-[#707070] text-[12px]">Calories (optional)</Label>
+                      <Input
+                        type="number"
+                        value={calories}
+                        onChange={(e) => setCalories(e.target.value)}
+                        placeholder="300"
+                        className="h-10 rounded-[10px] border-gray-200"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <Label className="text-[#707070] text-[12px]">Notes (optional)</Label>
+                    <Textarea
+                      value={notes}
+                      onChange={(e) => setNotes(e.target.value)}
+                      placeholder="Great session, focused on technique..."
+                      className="h-20 rounded-[10px] border-gray-200 resize-none"
+                    />
+                  </div>
+
+                  <Button
+                    onClick={handleSubmit}
+                    disabled={createWorkoutMutation.isPending}
+                    className="w-full bg-[#4a6bda] hover:bg-[#3a5bc8] text-white rounded-[15px] py-3"
+                  >
+                    {createWorkoutMutation.isPending ? "Adding..." : "Add Session"}
+                  </Button>
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Recent Sessions */}
             <div className="bg-white rounded-[20px] p-4 shadow-sm">
-              <h3 className="text-[#4a6bda] text-[16px] font-semibold mb-3">
-                Recent Sessions
-              </h3>
+              <h2 className="text-[#4a6bda] text-[16px] font-semibold mb-3">Recent Sessions</h2>
               
-              <div className="space-y-2">
-                {swimmingSessions.map((session, index) => (
-                  <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-[12px]">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="text-[14px] font-medium text-[#4a6bda]">
-                          {session.distance}
-                        </span>
-                        <span className="text-[12px] text-[#707070]">
-                          in {session.duration}
-                        </span>
+              {isLoading ? (
+                <div className="text-center py-4 text-[#707070]">Loading sessions...</div>
+              ) : workouts.length === 0 ? (
+                <div className="text-center py-4 text-[#707070]">
+                  No swimming sessions yet. Add your first session above!
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {workouts.slice(0, 5).map((workout) => (
+                    <div key={workout.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-[12px]">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="text-[14px] font-medium text-[#4a6bda]">
+                            {workout.distance}m • {workout.duration}min
+                          </span>
+                          {workout.strokeType && (
+                            <span className="text-[12px] text-[#707070] bg-white px-2 py-1 rounded-full">
+                              {swimmingStyles.find(s => s.value === workout.strokeType)?.emoji} {workout.strokeType}
+                            </span>
+                          )}
+                        </div>
+                        <div className="text-[12px] text-[#707070]">
+                          {new Date(workout.createdAt).toLocaleDateString()}
+                          {workout.calories && ` • ${workout.calories} cal`}
+                        </div>
+                        {workout.notes && (
+                          <div className="text-[11px] text-[#707070] mt-1 truncate">
+                            {workout.notes}
+                          </div>
+                        )}
                       </div>
-                      <div className="text-[11px] text-[#707070]">
-                        {session.style} • {session.calories} cal • {session.date}
-                      </div>
+                      <Button
+                        onClick={() => deleteWorkoutMutation.mutate(workout.id)}
+                        disabled={deleteWorkoutMutation.isPending}
+                        variant="ghost"
+                        size="sm"
+                        className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
                     </div>
-                    <div className="text-[20px]">
-                      {swimmingStyles.find(s => s.label.toLowerCase() === session.style.toLowerCase())?.emoji || "🏊‍♂️"}
-                    </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </div>
