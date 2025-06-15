@@ -103,7 +103,7 @@ export default function Running() {
 
     const workoutData: InsertRunningWorkout = {
       userId,
-      distance: parseFloat(distance),
+      distance: distance,
       duration: parseInt(duration),
       avgPace: avgPace || undefined,
       maxPace: maxPace || undefined,

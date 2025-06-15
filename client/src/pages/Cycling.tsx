@@ -101,10 +101,10 @@ export default function Cycling() {
 
     const workoutData: InsertCyclingWorkout = {
       userId,
-      distance: parseFloat(distance),
+      distance: distance,
       duration: parseInt(duration),
-      avgSpeed: avgSpeed ? parseFloat(avgSpeed) : undefined,
-      maxSpeed: maxSpeed ? parseFloat(maxSpeed) : undefined,
+      avgSpeed: avgSpeed || undefined,
+      maxSpeed: maxSpeed || undefined,
       elevation: elevation ? parseInt(elevation) : undefined,
       route: route || undefined,
       calories: calories ? parseInt(calories) : undefined,
