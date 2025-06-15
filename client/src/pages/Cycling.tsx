@@ -4,32 +4,125 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { ArrowLeft, Bike, MapPin, Gauge, Activity } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useToast } from "@/hooks/use-toast";
+import { ArrowLeft, Bike, MapPin, Gauge, Activity, Plus, Trash2, Clock, Target, TrendingUp } from "lucide-react";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { apiRequest, queryClient } from "@/lib/queryClient";
+import type { CyclingWorkout, InsertCyclingWorkout } from "@shared/schema";
 
 export default function Cycling() {
   const [, setLocation] = useLocation();
+  const { toast } = useToast();
+  const [showAddForm, setShowAddForm] = useState(false);
   const [distance, setDistance] = useState("");
   const [duration, setDuration] = useState("");
-  const [terrain, setTerrain] = useState("road");
+  const [avgSpeed, setAvgSpeed] = useState("");
+  const [maxSpeed, setMaxSpeed] = useState("");
+  const [elevation, setElevation] = useState("");
+  const [route, setRoute] = useState("");
+  const [calories, setCalories] = useState("");
+  const [notes, setNotes] = useState("");
 
-  const cyclingRides = [
-    { date: "Today", distance: "25.5km", duration: "1h 15m", terrain: "Road", avgSpeed: "20.4 km/h", calories: 520 },
-    { date: "Yesterday", distance: "18.2km", duration: "58m", terrain: "Trail", avgSpeed: "18.8 km/h", calories: 440 },
-    { date: "2 days ago", distance: "32.1km", duration: "1h 45m", terrain: "Mixed", avgSpeed: "18.3 km/h", calories: 680 }
-  ];
+  const userId = 1; // Using demo user ID
 
-  const terrainTypes = [
-    { name: "road", emoji: "🛣️", label: "Road" },
-    { name: "trail", emoji: "🌲", label: "Trail" },
-    { name: "mountain", emoji: "⛰️", label: "Mountain" },
-    { name: "indoor", emoji: "🏠", label: "Indoor" }
-  ];
+  // Fetch cycling workouts
+  const { data: workouts = [], isLoading } = useQuery<CyclingWorkout[]>({
+    queryKey: ['/api/cycling-workouts', userId],
+  });
 
+  // Create workout mutation
+  const createWorkoutMutation = useMutation({
+    mutationFn: async (workout: InsertCyclingWorkout) => {
+      return await apiRequest('/api/cycling-workouts', 'POST', workout);
+    },
+    onSuccess: () => {
+      toast({
+        title: "Success",
+        description: "Cycling workout added successfully!",
+      });
+      queryClient.invalidateQueries({ queryKey: ['/api/cycling-workouts', userId] });
+      resetForm();
+      setShowAddForm(false);
+    },
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description: "Failed to add cycling workout. Please try again.",
+        variant: "destructive",
+      });
+      console.error('Error creating workout:', error);
+    },
+  });
+
+  // Delete workout mutation
+  const deleteWorkoutMutation = useMutation({
+    mutationFn: async (workoutId: number) => {
+      return await apiRequest(`/api/cycling-workouts/${workoutId}`, 'DELETE');
+    },
+    onSuccess: () => {
+      toast({
+        title: "Success",
+        description: "Cycling workout deleted successfully!",
+      });
+      queryClient.invalidateQueries({ queryKey: ['/api/cycling-workouts', userId] });
+    },
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description: "Failed to delete cycling workout. Please try again.",
+        variant: "destructive",
+      });
+      console.error('Error deleting workout:', error);
+    },
+  });
+
+  const resetForm = () => {
+    setDistance("");
+    setDuration("");
+    setAvgSpeed("");
+    setMaxSpeed("");
+    setElevation("");
+    setRoute("");
+    setCalories("");
+    setNotes("");
+  };
+
+  const handleSubmit = () => {
+    if (!distance || !duration) {
+      toast({
+        title: "Error",
+        description: "Please fill in distance and duration fields.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const workoutData: InsertCyclingWorkout = {
+      userId,
+      distance: parseFloat(distance),
+      duration: parseInt(duration),
+      avgSpeed: avgSpeed ? parseFloat(avgSpeed) : undefined,
+      maxSpeed: maxSpeed ? parseFloat(maxSpeed) : undefined,
+      elevation: elevation ? parseInt(elevation) : undefined,
+      route: route || undefined,
+      calories: calories ? parseInt(calories) : undefined,
+      notes: notes || undefined,
+    };
+
+    createWorkoutMutation.mutate(workoutData);
+  };
+
+  // Calculate stats from real data
   const weeklyStats = {
-    totalDistance: 125.8,
-    totalTime: "6h 22m",
-    avgSpeed: "19.7 km/h",
-    rides: 8
+    totalDistance: workouts.reduce((sum, workout) => sum + parseFloat(workout.distance.toString()), 0),
+    totalTime: Math.round(workouts.reduce((sum, workout) => sum + workout.duration, 0)),
+    rides: workouts.length,
+    avgSpeed: workouts.length > 0 
+      ? (workouts.reduce((sum, workout) => sum + (parseFloat(workout.avgSpeed?.toString() || '0')), 0) / workouts.length).toFixed(1)
+      : '0',
+    totalCalories: workouts.reduce((sum, workout) => sum + (workout.calories || 0), 0)
   };
 
   return (
@@ -52,7 +145,7 @@ export default function Cycling() {
             </h1>
             
             <div className="absolute right-4 top-[50px] text-white text-center">
-              <div className="text-[18px] font-bold">{weeklyStats.totalDistance}km</div>
+              <div className="text-[18px] font-bold">{weeklyStats.totalDistance.toFixed(1)}km</div>
               <div className="text-[12px]">this week</div>
             </div>
           </div>
@@ -68,109 +161,200 @@ export default function Cycling() {
                 <div className="text-[10px] text-[#707070]">Rides</div>
               </div>
               <div className="bg-white/90 rounded-[12px] p-2 text-center">
-                <MapPin className="h-4 w-4 mx-auto mb-1 text-[#4a6bda]" />
-                <div className="text-[14px] font-bold text-[#4a6bda]">{weeklyStats.totalDistance}km</div>
+                <Target className="h-4 w-4 mx-auto mb-1 text-[#4a6bda]" />
+                <div className="text-[14px] font-bold text-[#4a6bda]">{weeklyStats.totalDistance.toFixed(1)}km</div>
                 <div className="text-[10px] text-[#707070]">Distance</div>
-              </div>
-              <div className="bg-white/90 rounded-[12px] p-2 text-center">
-                <Activity className="h-4 w-4 mx-auto mb-1 text-[#4a6bda]" />
-                <div className="text-[14px] font-bold text-[#4a6bda]">{weeklyStats.totalTime}</div>
-                <div className="text-[10px] text-[#707070]">Time</div>
               </div>
               <div className="bg-white/90 rounded-[12px] p-2 text-center">
                 <Gauge className="h-4 w-4 mx-auto mb-1 text-[#4a6bda]" />
                 <div className="text-[14px] font-bold text-[#4a6bda]">{weeklyStats.avgSpeed}</div>
                 <div className="text-[10px] text-[#707070]">Avg Speed</div>
               </div>
+              <div className="bg-white/90 rounded-[12px] p-2 text-center">
+                <Activity className="h-4 w-4 mx-auto mb-1 text-[#4a6bda]" />
+                <div className="text-[14px] font-bold text-[#4a6bda]">{weeklyStats.totalCalories}</div>
+                <div className="text-[10px] text-[#707070]">Calories</div>
+              </div>
             </div>
 
-            {/* Add Ride Form */}
-            <div className="bg-white rounded-[20px] p-4 mb-4 shadow-sm">
-              <h2 className="text-[#4a6bda] text-[18px] font-semibold mb-4 flex items-center gap-2">
-                <Bike className="h-5 w-5" />
-                Log Cycling Ride
-              </h2>
-              
-              <div className="space-y-3">
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <Label className="text-[#707070] text-[12px]">Distance (km)</Label>
-                    <Input
-                      type="number"
-                      value={distance}
-                      onChange={(e) => setDistance(e.target.value)}
-                      className="w-full h-[35px] rounded-[10px] text-[14px]"
-                      placeholder="25.5"
-                    />
-                  </div>
-                  <div>
-                    <Label className="text-[#707070] text-[12px]">Duration</Label>
-                    <Input
-                      type="text"
-                      value={duration}
-                      onChange={(e) => setDuration(e.target.value)}
-                      className="w-full h-[35px] rounded-[10px] text-[14px]"
-                      placeholder="1h 15m"
-                    />
-                  </div>
-                </div>
+            {/* Add Ride Button */}
+            <div className="mb-4">
+              <Button
+                onClick={() => setShowAddForm(!showAddForm)}
+                className="w-full bg-white text-[#4a6bda] hover:bg-white/90 rounded-[15px] py-3"
+              >
+                <Plus className="h-5 w-5 mr-2" />
+                {showAddForm ? "Cancel" : "Add Cycling Session"}
+              </Button>
+            </div>
+
+            {/* Add Session Form */}
+            {showAddForm && (
+              <div className="bg-white rounded-[20px] p-4 mb-4 shadow-sm">
+                <h2 className="text-[#4a6bda] text-[18px] font-semibold mb-4 flex items-center gap-2">
+                  <Bike className="h-5 w-5" />
+                  Log Cycling Session
+                </h2>
                 
-                <div>
-                  <Label className="text-[#707070] text-[12px] mb-2 block">Terrain Type</Label>
-                  <div className="grid grid-cols-4 gap-2">
-                    {terrainTypes.map((terrainOption) => (
-                      <button
-                        key={terrainOption.name}
-                        onClick={() => setTerrain(terrainOption.name)}
-                        className={`p-2 rounded-[10px] text-center transition-all ${
-                          terrain === terrainOption.name 
-                            ? 'bg-[#8fd4e8] text-white' 
-                            : 'bg-gray-100 text-[#707070]'
-                        }`}
-                      >
-                        <div className="text-[16px] mb-1">{terrainOption.emoji}</div>
-                        <div className="text-[10px]">{terrainOption.label}</div>
-                      </button>
-                    ))}
+                <div className="space-y-3">
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <Label className="text-[#707070] text-[12px]">Distance (km)</Label>
+                      <Input
+                        type="number"
+                        step="0.1"
+                        value={distance}
+                        onChange={(e) => setDistance(e.target.value)}
+                        placeholder="25.5"
+                        className="h-10 rounded-[10px] border-gray-200"
+                      />
+                    </div>
+                    <div>
+                      <Label className="text-[#707070] text-[12px]">Duration (min)</Label>
+                      <Input
+                        type="number"
+                        value={duration}
+                        onChange={(e) => setDuration(e.target.value)}
+                        placeholder="75"
+                        className="h-10 rounded-[10px] border-gray-200"
+                      />
+                    </div>
                   </div>
+
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <Label className="text-[#707070] text-[12px]">Avg Speed (km/h)</Label>
+                      <Input
+                        type="number"
+                        step="0.1"
+                        value={avgSpeed}
+                        onChange={(e) => setAvgSpeed(e.target.value)}
+                        placeholder="20.4"
+                        className="h-10 rounded-[10px] border-gray-200"
+                      />
+                    </div>
+                    <div>
+                      <Label className="text-[#707070] text-[12px]">Max Speed (km/h)</Label>
+                      <Input
+                        type="number"
+                        step="0.1"
+                        value={maxSpeed}
+                        onChange={(e) => setMaxSpeed(e.target.value)}
+                        placeholder="45.2"
+                        className="h-10 rounded-[10px] border-gray-200"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <Label className="text-[#707070] text-[12px]">Elevation (m)</Label>
+                      <Input
+                        type="number"
+                        value={elevation}
+                        onChange={(e) => setElevation(e.target.value)}
+                        placeholder="350"
+                        className="h-10 rounded-[10px] border-gray-200"
+                      />
+                    </div>
+                    <div>
+                      <Label className="text-[#707070] text-[12px]">Calories</Label>
+                      <Input
+                        type="number"
+                        value={calories}
+                        onChange={(e) => setCalories(e.target.value)}
+                        placeholder="520"
+                        className="h-10 rounded-[10px] border-gray-200"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <Label className="text-[#707070] text-[12px]">Route/Location</Label>
+                    <Input
+                      value={route}
+                      onChange={(e) => setRoute(e.target.value)}
+                      placeholder="Central Park Loop, City Trail..."
+                      className="h-10 rounded-[10px] border-gray-200"
+                    />
+                  </div>
+
+                  <div>
+                    <Label className="text-[#707070] text-[12px]">Notes (optional)</Label>
+                    <Textarea
+                      value={notes}
+                      onChange={(e) => setNotes(e.target.value)}
+                      placeholder="Weather conditions, bike performance, how you felt..."
+                      className="h-20 rounded-[10px] border-gray-200 resize-none"
+                    />
+                  </div>
+
+                  <Button
+                    onClick={handleSubmit}
+                    disabled={createWorkoutMutation.isPending}
+                    className="w-full bg-[#4a6bda] hover:bg-[#3a5bc8] text-white rounded-[15px] py-3"
+                  >
+                    {createWorkoutMutation.isPending ? "Adding..." : "Add Session"}
+                  </Button>
                 </div>
-
-                <Button
-                  className="w-full h-[35px] rounded-[15px] bg-[#8fd4e8] hover:bg-[#7fc4d8] text-white text-[14px] font-medium"
-                >
-                  Save Ride
-                </Button>
               </div>
-            </div>
+            )}
 
-            {/* Recent Rides */}
+            {/* Recent Sessions */}
             <div className="bg-white rounded-[20px] p-4 shadow-sm">
-              <h3 className="text-[#4a6bda] text-[16px] font-semibold mb-3">
-                Recent Rides
-              </h3>
+              <h2 className="text-[#4a6bda] text-[16px] font-semibold mb-3">Recent Rides</h2>
               
-              <div className="space-y-2">
-                {cyclingRides.map((ride, index) => (
-                  <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-[12px]">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="text-[14px] font-medium text-[#4a6bda]">
-                          {ride.distance}
-                        </span>
-                        <span className="text-[12px] text-[#707070]">
-                          in {ride.duration}
-                        </span>
+              {isLoading ? (
+                <div className="text-center py-4 text-[#707070]">Loading rides...</div>
+              ) : workouts.length === 0 ? (
+                <div className="text-center py-4 text-[#707070]">
+                  No cycling sessions yet. Add your first ride above!
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {workouts.slice(0, 5).map((workout) => (
+                    <div key={workout.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-[12px]">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="text-[14px] font-medium text-[#4a6bda]">
+                            {workout.distance}km • {workout.duration}min
+                          </span>
+                          {workout.avgSpeed && (
+                            <span className="text-[12px] text-[#707070] bg-white px-2 py-1 rounded-full">
+                              {workout.avgSpeed} km/h avg
+                            </span>
+                          )}
+                        </div>
+                        <div className="text-[12px] text-[#707070]">
+                          {new Date(workout.createdAt).toLocaleDateString()}
+                          {workout.calories && ` • ${workout.calories} cal`}
+                          {workout.elevation && ` • ${workout.elevation}m elevation`}
+                        </div>
+                        {workout.route && (
+                          <div className="text-[11px] text-[#707070] mt-1 flex items-center gap-1">
+                            <MapPin className="h-3 w-3" />
+                            {workout.route}
+                          </div>
+                        )}
+                        {workout.notes && (
+                          <div className="text-[11px] text-[#707070] mt-1 truncate">
+                            {workout.notes}
+                          </div>
+                        )}
                       </div>
-                      <div className="text-[11px] text-[#707070]">
-                        {ride.terrain} • {ride.avgSpeed} • {ride.calories} cal • {ride.date}
-                      </div>
+                      <Button
+                        onClick={() => deleteWorkoutMutation.mutate(workout.id)}
+                        disabled={deleteWorkoutMutation.isPending}
+                        variant="ghost"
+                        size="sm"
+                        className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
                     </div>
-                    <div className="text-[20px]">
-                      {terrainTypes.find(t => t.label.toLowerCase() === ride.terrain.toLowerCase())?.emoji || "🚴‍♂️"}
-                    </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </div>

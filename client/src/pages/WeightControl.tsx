@@ -4,41 +4,125 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { ArrowLeft, Scale, TrendingDown, TrendingUp, Target } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/hooks/use-toast";
+import { ArrowLeft, Scale, TrendingDown, TrendingUp, Plus, Trash2, Target } from "lucide-react";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { apiRequest, queryClient } from "@/lib/queryClient";
+import type { WeightEntry, InsertWeightEntry } from "@shared/schema";
 
 export default function WeightControl() {
   const [, setLocation] = useLocation();
-  const [currentWeight, setCurrentWeight] = useState("");
-  const [targetWeight, setTargetWeight] = useState("70");
-  const [timeframe, setTimeframe] = useState("12");
+  const { toast } = useToast();
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [weight, setWeight] = useState("");
+  const [bodyFatPercentage, setBodyFatPercentage] = useState("");
+  const [muscleMass, setMuscleMass] = useState("");
+  const [notes, setNotes] = useState("");
 
-  const weightEntries = [
-    { date: "Today", weight: 75.2, change: -0.3, note: "Morning weigh-in" },
-    { date: "Yesterday", weight: 75.5, change: -0.1, note: "After workout" },
-    { date: "2 days ago", weight: 75.6, change: 0.2, note: "Evening" },
-    { date: "3 days ago", weight: 75.4, change: -0.4, note: "Morning" },
-    { date: "4 days ago", weight: 75.8, change: 0.1, note: "After meal" }
-  ];
+  const userId = 1; // Using demo user ID
 
-  const currentWeightValue = 75.2;
-  const targetWeightValue = 70.0;
-  const startWeight = 78.5;
-  const weightLost = startWeight - currentWeightValue;
-  const weightToGo = currentWeightValue - targetWeightValue;
-  const progressPercentage = ((startWeight - currentWeightValue) / (startWeight - targetWeightValue)) * 100;
+  // Fetch weight entries
+  const { data: entries = [], isLoading } = useQuery<WeightEntry[]>({
+    queryKey: ['/api/weight-entries', userId],
+  });
 
-  const bmiCalculation = {
-    height: 175, // cm
-    bmi: (currentWeightValue / Math.pow(1.75, 2)).toFixed(1),
-    category: "Normal"
+  // Create weight entry mutation
+  const createEntryMutation = useMutation({
+    mutationFn: async (entry: InsertWeightEntry) => {
+      return await apiRequest('/api/weight-entries', 'POST', entry);
+    },
+    onSuccess: () => {
+      toast({
+        title: "Success",
+        description: "Weight entry added successfully!",
+      });
+      queryClient.invalidateQueries({ queryKey: ['/api/weight-entries', userId] });
+      resetForm();
+      setShowAddForm(false);
+    },
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description: "Failed to add weight entry. Please try again.",
+        variant: "destructive",
+      });
+      console.error('Error creating entry:', error);
+    },
+  });
+
+  // Delete weight entry mutation
+  const deleteEntryMutation = useMutation({
+    mutationFn: async (entryId: number) => {
+      return await apiRequest(`/api/weight-entries/${entryId}`, 'DELETE');
+    },
+    onSuccess: () => {
+      toast({
+        title: "Success",
+        description: "Weight entry deleted successfully!",
+      });
+      queryClient.invalidateQueries({ queryKey: ['/api/weight-entries', userId] });
+    },
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description: "Failed to delete weight entry. Please try again.",
+        variant: "destructive",
+      });
+      console.error('Error deleting entry:', error);
+    },
+  });
+
+  const resetForm = () => {
+    setWeight("");
+    setBodyFatPercentage("");
+    setMuscleMass("");
+    setNotes("");
+  };
+
+  const handleSubmit = () => {
+    if (!weight) {
+      toast({
+        title: "Error",
+        description: "Please enter your weight.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const entryData: InsertWeightEntry = {
+      userId,
+      weight: weight,
+      bodyFatPercentage: bodyFatPercentage || undefined,
+      muscleMass: muscleMass || undefined,
+      notes: notes || undefined,
+    };
+
+    createEntryMutation.mutate(entryData);
+  };
+
+  // Calculate stats from real data
+  const currentWeight = entries.length > 0 ? parseFloat(entries[0].weight.toString()) : 0;
+  const previousWeight = entries.length > 1 ? parseFloat(entries[1].weight.toString()) : currentWeight;
+  const weightChange = currentWeight - previousWeight;
+  const avgWeight = entries.length > 0 
+    ? entries.reduce((sum, entry) => sum + parseFloat(entry.weight.toString()), 0) / entries.length
+    : 0;
+
+  const stats = {
+    currentWeight: currentWeight.toFixed(1),
+    weightChange: weightChange.toFixed(1),
+    avgWeight: avgWeight.toFixed(1),
+    totalEntries: entries.length,
+    trend: weightChange > 0 ? 'up' : weightChange < 0 ? 'down' : 'stable'
   };
 
   return (
     <div className="flex justify-center w-full bg-transparent">
       <Card className="relative w-[390px] h-[844px] rounded-[25px] overflow-hidden border-none">
-        <div className="absolute w-full h-full bg-gradient-to-b from-[#c8f0f4] to-[#4a6bda] rounded-[25px] overflow-hidden">
+        <div className="absolute w-full h-full bg-gradient-to-b from-[#70c1e4] to-[#4a6bda] rounded-[25px] overflow-hidden">
           {/* Header */}
-          <div className="absolute top-0 left-0 w-full h-[140px] bg-[#c8f0f4] rounded-t-[25px]">
+          <div className="absolute top-0 left-0 w-full h-[140px] bg-[#70c1e4] rounded-t-[25px]">
             <Button
               onClick={() => setLocation("/dashboard")}
               variant="ghost"
@@ -48,12 +132,12 @@ export default function WeightControl() {
               <ArrowLeft className="h-6 w-6" />
             </Button>
             
-            <h1 className="absolute left-1/2 top-[50px] transform -translate-x-1/2 text-white text-[24px] font-semibold">
-              Weight Control
+            <h1 className="absolute left-1/2 top-[50px] transform -translate-x-1/2 text-white text-[24px] font-semibold flex items-center gap-2">
+              ⚖️ Weight Control
             </h1>
             
             <div className="absolute right-4 top-[50px] text-white text-center">
-              <div className="text-[18px] font-bold">{currentWeightValue}kg</div>
+              <div className="text-[18px] font-bold">{stats.currentWeight}kg</div>
               <div className="text-[12px]">current</div>
             </div>
           </div>
@@ -61,147 +145,171 @@ export default function WeightControl() {
           {/* Content */}
           <div className="absolute top-[150px] left-0 w-full px-4 pb-4" style={{ height: 'calc(100% - 150px)', overflowY: 'auto' }}>
             
-            {/* Weight Progress Overview */}
-            <div className="bg-white rounded-[20px] p-4 mb-4 shadow-sm">
-              <h2 className="text-[#4a6bda] text-[18px] font-semibold mb-4 flex items-center gap-2">
-                <Target className="h-5 w-5" />
-                Weight Goal Progress
-              </h2>
-              
-              <div className="grid grid-cols-3 gap-3 mb-4">
-                <div className="text-center p-3 bg-blue-50 rounded-[12px]">
-                  <div className="text-[18px] font-bold text-[#4a6bda]">{weightLost.toFixed(1)}kg</div>
-                  <div className="text-[11px] text-[#707070]">Lost</div>
-                </div>
-                <div className="text-center p-3 bg-green-50 rounded-[12px]">
-                  <div className="text-[18px] font-bold text-green-600">{weightToGo.toFixed(1)}kg</div>
-                  <div className="text-[11px] text-[#707070]">To Go</div>
-                </div>
-                <div className="text-center p-3 bg-orange-50 rounded-[12px]">
-                  <div className="text-[18px] font-bold text-orange-600">{progressPercentage.toFixed(0)}%</div>
-                  <div className="text-[11px] text-[#707070]">Progress</div>
-                </div>
+            {/* Quick Stats */}
+            <div className="grid grid-cols-4 gap-2 mb-4">
+              <div className="bg-white/90 rounded-[12px] p-2 text-center">
+                <Scale className="h-4 w-4 mx-auto mb-1 text-[#4a6bda]" />
+                <div className="text-[14px] font-bold text-[#4a6bda]">{stats.currentWeight}kg</div>
+                <div className="text-[10px] text-[#707070]">Current</div>
               </div>
-
-              <div className="mb-4">
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-[14px] text-[#707070]">Goal Progress</span>
-                  <span className="text-[14px] font-medium text-[#4a6bda]">{currentWeightValue}kg → {targetWeightValue}kg</span>
+              <div className="bg-white/90 rounded-[12px] p-2 text-center">
+                {stats.trend === 'up' ? (
+                  <TrendingUp className="h-4 w-4 mx-auto mb-1 text-red-500" />
+                ) : stats.trend === 'down' ? (
+                  <TrendingDown className="h-4 w-4 mx-auto mb-1 text-green-500" />
+                ) : (
+                  <Target className="h-4 w-4 mx-auto mb-1 text-[#4a6bda]" />
+                )}
+                <div className={`text-[14px] font-bold ${
+                  stats.trend === 'up' ? 'text-red-500' : 
+                  stats.trend === 'down' ? 'text-green-500' : 'text-[#4a6bda]'
+                }`}>
+                  {weightChange > 0 ? '+' : ''}{stats.weightChange}kg
                 </div>
-                
-                <div className="w-full bg-gray-200 rounded-full h-3">
-                  <div 
-                    className="h-3 rounded-full bg-[#c8f0f4] transition-all duration-500"
-                    style={{ width: `${Math.min(progressPercentage, 100)}%` }}
-                  />
-                </div>
+                <div className="text-[10px] text-[#707070]">Change</div>
               </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div className="text-center p-2 bg-gray-50 rounded-[10px]">
-                  <div className="text-[14px] font-medium text-[#4a6bda]">BMI</div>
-                  <div className="text-[16px] font-bold">{bmiCalculation.bmi}</div>
-                  <div className="text-[10px] text-green-600">{bmiCalculation.category}</div>
-                </div>
-                <div className="text-center p-2 bg-gray-50 rounded-[10px]">
-                  <div className="text-[14px] font-medium text-[#4a6bda]">Target Date</div>
-                  <div className="text-[16px] font-bold">{timeframe} weeks</div>
-                  <div className="text-[10px] text-[#707070]">Estimated</div>
-                </div>
+              <div className="bg-white/90 rounded-[12px] p-2 text-center">
+                <Target className="h-4 w-4 mx-auto mb-1 text-[#4a6bda]" />
+                <div className="text-[14px] font-bold text-[#4a6bda]">{stats.avgWeight}kg</div>
+                <div className="text-[10px] text-[#707070]">Average</div>
+              </div>
+              <div className="bg-white/90 rounded-[12px] p-2 text-center">
+                <Scale className="h-4 w-4 mx-auto mb-1 text-[#4a6bda]" />
+                <div className="text-[14px] font-bold text-[#4a6bda]">{stats.totalEntries}</div>
+                <div className="text-[10px] text-[#707070]">Entries</div>
               </div>
             </div>
 
-            {/* Log Weight */}
-            <div className="bg-white rounded-[20px] p-4 mb-4 shadow-sm">
-              <h2 className="text-[#4a6bda] text-[18px] font-semibold mb-4 flex items-center gap-2">
-                <Scale className="h-5 w-5" />
-                Log Weight
-              </h2>
-              
-              <div className="space-y-3">
-                <div>
-                  <Label className="text-[#707070] text-[14px]">Current Weight (kg)</Label>
-                  <Input
-                    type="number"
-                    value={currentWeight}
-                    onChange={(e) => setCurrentWeight(e.target.value)}
-                    className="w-full h-[40px] rounded-[15px] text-[14px]"
-                    placeholder="75.2"
-                    step="0.1"
-                  />
-                </div>
+            {/* Add Entry Button */}
+            <div className="mb-4">
+              <Button
+                onClick={() => setShowAddForm(!showAddForm)}
+                className="w-full bg-white text-[#4a6bda] hover:bg-white/90 rounded-[15px] py-3"
+              >
+                <Plus className="h-5 w-5 mr-2" />
+                {showAddForm ? "Cancel" : "Add Weight Entry"}
+              </Button>
+            </div>
+
+            {/* Add Entry Form */}
+            {showAddForm && (
+              <div className="bg-white rounded-[20px] p-4 mb-4 shadow-sm">
+                <h2 className="text-[#4a6bda] text-[18px] font-semibold mb-4 flex items-center gap-2">
+                  ⚖️ Log Weight Entry
+                </h2>
                 
-                <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-3">
                   <div>
-                    <Label className="text-[#707070] text-[14px]">Target Weight (kg)</Label>
+                    <Label className="text-[#707070] text-[12px]">Weight (kg)</Label>
                     <Input
                       type="number"
-                      value={targetWeight}
-                      onChange={(e) => setTargetWeight(e.target.value)}
-                      className="w-full h-[40px] rounded-[15px] text-[14px]"
-                      placeholder="70"
                       step="0.1"
+                      value={weight}
+                      onChange={(e) => setWeight(e.target.value)}
+                      placeholder="70.5"
+                      className="h-10 rounded-[10px] border-gray-200"
                     />
                   </div>
+
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <Label className="text-[#707070] text-[12px]">Body Fat % (optional)</Label>
+                      <Input
+                        type="number"
+                        step="0.1"
+                        value={bodyFatPercentage}
+                        onChange={(e) => setBodyFatPercentage(e.target.value)}
+                        placeholder="15.2"
+                        className="h-10 rounded-[10px] border-gray-200"
+                      />
+                    </div>
+                    <div>
+                      <Label className="text-[#707070] text-[12px]">Muscle Mass (kg)</Label>
+                      <Input
+                        type="number"
+                        step="0.1"
+                        value={muscleMass}
+                        onChange={(e) => setMuscleMass(e.target.value)}
+                        placeholder="45.8"
+                        className="h-10 rounded-[10px] border-gray-200"
+                      />
+                    </div>
+                  </div>
+
                   <div>
-                    <Label className="text-[#707070] text-[14px]">Timeframe (weeks)</Label>
-                    <Input
-                      type="number"
-                      value={timeframe}
-                      onChange={(e) => setTimeframe(e.target.value)}
-                      className="w-full h-[40px] rounded-[15px] text-[14px]"
-                      placeholder="12"
+                    <Label className="text-[#707070] text-[12px]">Notes (optional)</Label>
+                    <Textarea
+                      value={notes}
+                      onChange={(e) => setNotes(e.target.value)}
+                      placeholder="Morning weight, after workout, feeling..."
+                      className="h-20 rounded-[10px] border-gray-200 resize-none"
                     />
                   </div>
+
+                  <Button
+                    onClick={handleSubmit}
+                    disabled={createEntryMutation.isPending}
+                    className="w-full bg-[#4a6bda] hover:bg-[#3a5bc8] text-white rounded-[15px] py-3"
+                  >
+                    {createEntryMutation.isPending ? "Adding..." : "Add Entry"}
+                  </Button>
                 </div>
-
-                <Button
-                  className="w-full h-[40px] rounded-[15px] bg-[#c8f0f4] hover:bg-[#b8e0e4] text-white text-[14px] font-medium"
-                >
-                  Save Weight Entry
-                </Button>
               </div>
-            </div>
+            )}
 
-            {/* Weight History */}
+            {/* Recent Entries */}
             <div className="bg-white rounded-[20px] p-4 shadow-sm">
-              <h3 className="text-[#4a6bda] text-[18px] font-semibold mb-3">
-                Weight History
-              </h3>
+              <h2 className="text-[#4a6bda] text-[16px] font-semibold mb-3">Weight History</h2>
               
-              <div className="space-y-2">
-                {weightEntries.map((entry, index) => (
-                  <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-[12px]">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="text-[16px] font-bold text-[#4a6bda]">
-                          {entry.weight}kg
-                        </span>
-                        <span className={`flex items-center gap-1 text-[12px] font-medium ${
-                          entry.change > 0 ? 'text-red-500' : 'text-green-500'
-                        }`}>
-                          {entry.change > 0 ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
-                          {entry.change > 0 ? '+' : ''}{entry.change}kg
-                        </span>
-                      </div>
-                      <div className="text-[11px] text-[#707070]">
-                        {entry.note} • {entry.date}
-                      </div>
-                    </div>
-                    
-                    <div className="text-[20px]">
-                      {entry.change > 0 ? '📈' : '📉'}
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              <div className="mt-4 p-3 bg-blue-50 rounded-[12px] text-center">
-                <div className="text-[12px] text-[#4a6bda] mb-1">Weekly Average</div>
-                <div className="text-[16px] font-bold text-[#4a6bda]">
-                  {(weightEntries.slice(0, 7).reduce((sum, entry) => sum + entry.weight, 0) / Math.min(7, weightEntries.length)).toFixed(1)}kg
+              {isLoading ? (
+                <div className="text-center py-4 text-[#707070]">Loading entries...</div>
+              ) : entries.length === 0 ? (
+                <div className="text-center py-4 text-[#707070]">
+                  No weight entries yet. Add your first entry above!
                 </div>
-              </div>
+              ) : (
+                <div className="space-y-3">
+                  {entries.slice(0, 10).map((entry, index) => (
+                    <div key={entry.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-[12px]">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="text-[16px] font-medium text-[#4a6bda]">
+                            {entry.weight}kg
+                          </span>
+                          {index > 0 && (
+                            <span className={`text-[12px] px-2 py-1 rounded-full ${
+                              parseFloat(entry.weight.toString()) > parseFloat(entries[index - 1].weight.toString())
+                                ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'
+                            }`}>
+                              {parseFloat(entry.weight.toString()) > parseFloat(entries[index - 1].weight.toString()) ? '↗️' : '↘️'}
+                              {Math.abs(parseFloat(entry.weight.toString()) - parseFloat(entries[index - 1].weight.toString())).toFixed(1)}kg
+                            </span>
+                          )}
+                        </div>
+                        <div className="text-[12px] text-[#707070]">
+                          {new Date(entry.createdAt).toLocaleDateString()}
+                          {entry.bodyFatPercentage && ` • ${entry.bodyFatPercentage}% body fat`}
+                          {entry.muscleMass && ` • ${entry.muscleMass}kg muscle`}
+                        </div>
+                        {entry.notes && (
+                          <div className="text-[11px] text-[#707070] mt-1 truncate">
+                            {entry.notes}
+                          </div>
+                        )}
+                      </div>
+                      <Button
+                        onClick={() => deleteEntryMutation.mutate(entry.id)}
+                        disabled={deleteEntryMutation.isPending}
+                        variant="ghost"
+                        size="sm"
+                        className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </div>
