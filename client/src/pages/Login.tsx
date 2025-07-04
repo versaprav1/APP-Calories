@@ -165,32 +165,34 @@ export default function Login() {
                 />
               </div>
 
-              <div className="flex flex-col items-center gap-6 pt-8">
+              <div className="pt-8 space-y-6">
                 <Button
                   type="submit"
                   disabled={loginMutation.isPending}
-                  className="w-full h-[60px] rounded-2xl bg-white text-gray-900 hover:bg-white/90 text-lg font-semibold shadow-lg flex items-center justify-center gap-2 transition-all duration-300 hover:scale-105"
+                  className="w-full h-[60px] rounded-2xl bg-white text-gray-900 hover:bg-white/90 text-lg font-semibold shadow-lg transition-all duration-300 hover:scale-105"
                 >
-                  {loginMutation.isPending ? (
-                    <>
-                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-gray-900" />
-                      Signing in...
-                    </>
-                  ) : (
-                    <>
-                      Sign In
-                      <ArrowRight className="h-5 w-5" />
-                    </>
-                  )}
+                  <div className="flex items-center justify-center gap-2">
+                    {loginMutation.isPending ? (
+                      <>
+                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-gray-900" />
+                        Signing in...
+                      </>
+                    ) : (
+                      <>
+                        Sign In
+                        <ArrowRight className="h-5 w-5" />
+                      </>
+                    )}
+                  </div>
                 </Button>
                 
                 <div className="text-center">
-                  <p className="text-white/80 text-sm mb-2">Don't have an account?</p>
+                  <p className="text-white/80 text-sm mb-3">Don't have an account?</p>
                   <Button
                     type="button"
                     variant="ghost"
                     onClick={() => setLocation("/register")}
-                    className="text-white hover:bg-white/20 underline"
+                    className="text-white hover:bg-white/20 underline text-base"
                   >
                     Create Account
                   </Button>
