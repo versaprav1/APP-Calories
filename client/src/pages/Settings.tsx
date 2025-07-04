@@ -2,6 +2,22 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useLocation } from "wouter";
 import { Switch } from "@/components/ui/switch";
+import { Card } from "@/components/ui/card";
+import { 
+  ArrowLeft, 
+  Settings as SettingsIcon, 
+  Moon, 
+  Bell, 
+  Volume2, 
+  Vibrate,
+  HardDrive,
+  Fingerprint,
+  RefreshCw,
+  Shield,
+  User,
+  Palette,
+  Smartphone
+} from "lucide-react";
 
 export default function Settings() {
   const [, setLocation] = useLocation();
@@ -20,187 +36,222 @@ export default function Settings() {
     setSettings(prev => ({ ...prev, [key]: !prev[key] }));
   };
 
+  const settingsGroups = [
+    {
+      title: "Appearance",
+      icon: Palette,
+      settings: [
+        { 
+          key: "darkMode" as const, 
+          label: "Dark Mode", 
+          description: "Switch to dark theme",
+          icon: Moon 
+        }
+      ]
+    },
+    {
+      title: "Notifications",
+      icon: Bell,
+      settings: [
+        { 
+          key: "notifications" as const, 
+          label: "Push Notifications", 
+          description: "Receive workout reminders",
+          icon: Bell 
+        },
+        { 
+          key: "soundEffects" as const, 
+          label: "Sound Effects", 
+          description: "Play notification sounds",
+          icon: Volume2 
+        },
+        { 
+          key: "vibration" as const, 
+          label: "Vibration", 
+          description: "Vibrate for notifications",
+          icon: Vibrate 
+        }
+      ]
+    },
+    {
+      title: "Data & Sync",
+      icon: RefreshCw,
+      settings: [
+        { 
+          key: "autoBackup" as const, 
+          label: "Auto Backup", 
+          description: "Automatically backup workout data",
+          icon: HardDrive 
+        },
+        { 
+          key: "dataSync" as const, 
+          label: "Cloud Sync", 
+          description: "Sync data across devices",
+          icon: RefreshCw 
+        }
+      ]
+    },
+    {
+      title: "Security",
+      icon: Shield,
+      settings: [
+        { 
+          key: "biometricAuth" as const, 
+          label: "Biometric Login", 
+          description: "Use fingerprint or face ID",
+          icon: Fingerprint 
+        },
+        { 
+          key: "privacy" as const, 
+          label: "Privacy Mode", 
+          description: "Hide sensitive data in app switcher",
+          icon: Shield 
+        }
+      ]
+    }
+  ];
+
   return (
-    <div className="min-h-screen bg-white">
-      <div className="max-w-md mx-auto relative pb-20">
-        {/* Status bar */}
-        <div className="flex justify-between items-center px-4 py-2">
-          <div className="text-black text-[14px] font-medium">19:09</div>
-          <div className="flex space-x-1">
-            <div className="w-1 h-1 bg-black rounded-full"></div>
-            <div className="w-1 h-1 bg-black rounded-full"></div>
-            <div className="w-1 h-1 bg-black rounded-full"></div>
-            <div className="w-1 h-1 bg-black rounded-full"></div>
-          </div>
-        </div>
-
-        {/* Header */}
-        <div className="flex items-center px-4 py-4">
-          <Button
-            onClick={() => setLocation("/account")}
-            variant="ghost"
-            className="text-[#70c1e4] hover:bg-[#70c1e4]/10"
-          >
-            ← Back
-          </Button>
-        </div>
-
-        {/* Logo */}
-        <div className="flex justify-center mb-8">
-          <div className="w-[80px] h-[80px] bg-[#70c1e4] rounded-full flex items-center justify-center">
-            <div className="text-white text-[24px]">🌿</div>
-          </div>
-        </div>
-
-        <div className="px-8">
-          <h1 className="text-[24px] font-semibold text-center mb-8 text-[#70c1e4]">Settings</h1>
+    <div className="flex justify-center w-full bg-transparent min-h-screen">
+      <Card className="relative w-[390px] min-h-[844px] rounded-[25px] overflow-hidden border-none">
+        
+        {/* Dynamic Background */}
+        <div className="absolute w-full h-full bg-gradient-to-br from-slate-600 via-gray-700 to-zinc-800 transition-all duration-700">
           
-          <div className="space-y-6">
-            <div className="bg-[#f8f9fa] rounded-[20px] p-4">
-              <h3 className="text-[16px] font-medium text-[#70c1e4] mb-4">Appearance</h3>
-              
-              <div className="space-y-4">
-                <div className="flex justify-between items-center">
-                  <span className="text-[14px] text-gray-700">Dark Mode</span>
-                  <Switch 
-                    checked={settings.darkMode}
-                    onCheckedChange={() => handleToggle('darkMode')}
-                  />
-                </div>
-              </div>
+          {/* Background Pattern */}
+          <div className="absolute inset-0 overflow-hidden">
+            <div className="absolute -top-10 -right-10 text-8xl opacity-5 animate-float">
+              ⚙️🔧🛠️
             </div>
-
-            <div className="bg-[#f8f9fa] rounded-[20px] p-4">
-              <h3 className="text-[16px] font-medium text-[#70c1e4] mb-4">Notifications</h3>
-              
-              <div className="space-y-4">
-                <div className="flex justify-between items-center">
-                  <span className="text-[14px] text-gray-700">Push Notifications</span>
-                  <Switch 
-                    checked={settings.notifications}
-                    onCheckedChange={() => handleToggle('notifications')}
-                  />
-                </div>
-                
-                <div className="flex justify-between items-center">
-                  <span className="text-[14px] text-gray-700">Sound Effects</span>
-                  <Switch 
-                    checked={settings.soundEffects}
-                    onCheckedChange={() => handleToggle('soundEffects')}
-                  />
-                </div>
-                
-                <div className="flex justify-between items-center">
-                  <span className="text-[14px] text-gray-700">Vibration</span>
-                  <Switch 
-                    checked={settings.vibration}
-                    onCheckedChange={() => handleToggle('vibration')}
-                  />
-                </div>
-              </div>
+            <div className="absolute top-1/3 -left-10 text-6xl opacity-10 animate-float-delayed">
+              🔒🛡️⚡
             </div>
-
-            <div className="bg-[#f8f9fa] rounded-[20px] p-4">
-              <h3 className="text-[16px] font-medium text-[#70c1e4] mb-4">Security & Privacy</h3>
-              
-              <div className="space-y-4">
-                <div className="flex justify-between items-center">
-                  <span className="text-[14px] text-gray-700">Biometric Authentication</span>
-                  <Switch 
-                    checked={settings.biometricAuth}
-                    onCheckedChange={() => handleToggle('biometricAuth')}
-                  />
-                </div>
-                
-                <div className="flex justify-between items-center">
-                  <span className="text-[14px] text-gray-700">Privacy Mode</span>
-                  <Switch 
-                    checked={settings.privacy}
-                    onCheckedChange={() => handleToggle('privacy')}
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-[#f8f9fa] rounded-[20px] p-4">
-              <h3 className="text-[16px] font-medium text-[#70c1e4] mb-4">Data & Storage</h3>
-              
-              <div className="space-y-4">
-                <div className="flex justify-between items-center">
-                  <span className="text-[14px] text-gray-700">Auto Backup</span>
-                  <Switch 
-                    checked={settings.autoBackup}
-                    onCheckedChange={() => handleToggle('autoBackup')}
-                  />
-                </div>
-                
-                <div className="flex justify-between items-center">
-                  <span className="text-[14px] text-gray-700">Data Sync</span>
-                  <Switch 
-                    checked={settings.dataSync}
-                    onCheckedChange={() => handleToggle('dataSync')}
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className="space-y-3">
-              <Button
-                variant="outline"
-                className="w-full h-[50px] rounded-[25px] border-[#70c1e4] text-[#70c1e4] text-[16px] font-medium"
-              >
-                Clear Cache
-              </Button>
-              
-              <Button
-                variant="outline"
-                className="w-full h-[50px] rounded-[25px] border-red-500 text-red-500 text-[16px] font-medium"
-              >
-                Reset All Settings
-              </Button>
+            <div className="absolute bottom-1/4 right-1/4 text-5xl opacity-5 animate-bounce-slow">
+              📱💾🔔
             </div>
           </div>
-        </div>
 
-        {/* Bottom Navigation */}
-        <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200">
-          <div className="max-w-md mx-auto">
-            <div className="flex justify-around py-2">
-              <button 
-                onClick={() => setLocation("/dashboard")}
-                className="flex flex-col items-center py-2 px-4"
-              >
-                <div className="w-6 h-6 mb-1">🏠</div>
-                <span className="text-[10px] text-gray-600">Home</span>
-              </button>
-              
-              <button 
+          {/* Header */}
+          <div className="relative px-6 pt-12 pb-6 z-10">
+            <div className="flex justify-between items-center mb-8">
+              <Button
                 onClick={() => setLocation("/account")}
-                className="flex flex-col items-center py-2 px-4"
+                variant="ghost"
+                className="text-white hover:bg-white/20 flex items-center gap-2"
               >
-                <div className="w-6 h-6 mb-1">👤</div>
-                <span className="text-[10px] text-[#70c1e4] font-medium">Account</span>
-              </button>
+                <ArrowLeft className="h-5 w-5" />
+                Back
+              </Button>
               
-              <button 
-                onClick={() => setLocation("/activity")}
-                className="flex flex-col items-center py-2 px-4"
-              >
-                <div className="w-6 h-6 mb-1">📊</div>
-                <span className="text-[10px] text-gray-600">Activity</span>
-              </button>
-              
-              <button 
-                onClick={() => setLocation("/resources")}
-                className="flex flex-col items-center py-2 px-4"
-              >
-                <div className="w-6 h-6 mb-1">📚</div>
-                <span className="text-[10px] text-gray-600">Resources</span>
-              </button>
+              <div className="text-white text-sm font-medium">Settings</div>
             </div>
           </div>
+
+          {/* Content */}
+          <div className="px-6 pb-8 z-10 relative animate-fade-in">
+            
+            {/* Icon */}
+            <div className="flex justify-center mb-8">
+              <div className="bg-white/20 backdrop-blur-sm rounded-3xl p-6">
+                <SettingsIcon className="h-16 w-16 text-white" />
+              </div>
+            </div>
+
+            {/* Title */}
+            <h1 className="text-4xl font-bold text-white text-center mb-4 leading-tight">
+              App Settings
+            </h1>
+
+            {/* Subtitle */}
+            <p className="text-white/90 text-center text-lg leading-relaxed mb-8 px-2">
+              Customize your app experience and preferences
+            </p>
+
+            {/* Settings Groups */}
+            <div className="space-y-6">
+              {settingsGroups.map((group, groupIndex) => (
+                <div key={group.title} className="bg-white/10 backdrop-blur-sm rounded-2xl p-6">
+                  <div className="flex items-center gap-3 mb-4">
+                    <group.icon className="h-6 w-6 text-white" />
+                    <h2 className="text-white text-xl font-semibold">{group.title}</h2>
+                  </div>
+                  
+                  <div className="space-y-4">
+                    {group.settings.map((setting, settingIndex) => (
+                      <div 
+                        key={setting.key}
+                        className="flex items-center justify-between p-4 bg-white/10 backdrop-blur-sm rounded-xl hover:bg-white/20 transition-colors duration-200"
+                      >
+                        <div className="flex items-center gap-3 flex-1">
+                          <setting.icon className="h-5 w-5 text-white/80" />
+                          <div>
+                            <div className="text-white font-medium">{setting.label}</div>
+                            <div className="text-white/70 text-sm">{setting.description}</div>
+                          </div>
+                        </div>
+                        <Switch
+                          checked={settings[setting.key]}
+                          onCheckedChange={() => handleToggle(setting.key)}
+                          className="data-[state=checked]:bg-white data-[state=unchecked]:bg-white/30"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* User Profile Section */}
+            <div className="mt-8 bg-white/10 backdrop-blur-sm rounded-2xl p-6 text-center">
+              <User className="h-8 w-8 text-white mx-auto mb-3" />
+              <div className="text-white font-semibold mb-2">Signed in as Praveen</div>
+              <div className="text-white/80 text-sm mb-4">
+                Triathlon Health Tracker Pro
+              </div>
+              <Button
+                onClick={() => setLocation("/profile-setup")}
+                className="w-full bg-white/20 backdrop-blur-sm text-white hover:bg-white/30 border border-white/30 rounded-xl"
+              >
+                Edit Profile
+              </Button>
+            </div>
+
+            {/* App Info */}
+            <div className="mt-6 bg-white/10 backdrop-blur-sm rounded-2xl p-4 text-center">
+              <Smartphone className="h-6 w-6 text-white mx-auto mb-2" />
+              <div className="text-white text-sm font-medium mb-1">Triathlon Health Tracker</div>
+              <div className="text-white/70 text-xs">Version 2.1.0 • Build 2025.1</div>
+            </div>
+          </div>
+
+          {/* Bottom Gradient Overlay */}
+          <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />
         </div>
-      </div>
+
+        {/* Custom CSS for animations */}
+        <style>{`
+          @keyframes fade-in {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+          }
+          @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+          }
+          @keyframes float-delayed {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(-3deg); }
+          }
+          @keyframes bounce-slow {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+          }
+          .animate-fade-in { animation: fade-in 0.6s ease-out; }
+          .animate-float { animation: float 6s ease-in-out infinite; }
+          .animate-float-delayed { animation: float-delayed 8s ease-in-out infinite; }
+          .animate-bounce-slow { animation: bounce-slow 4s ease-in-out infinite; }
+        `}</style>
+      </Card>
     </div>
   );
 }
