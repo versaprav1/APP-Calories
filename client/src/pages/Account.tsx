@@ -86,14 +86,14 @@ export default function Account() {
           </div>
 
           {/* Header */}
-          <div className="relative px-6 pt-12 pb-6 z-10">
-            <div className="flex justify-between items-center mb-8">
+          <div className="relative px-5 pt-10 pb-4 z-10">
+            <div className="flex justify-between items-center mb-6">
               <Button
                 onClick={() => setLocation("/dashboard")}
                 variant="ghost"
-                className="text-white hover:bg-white/20 flex items-center gap-2"
+                className="text-white hover:bg-white/20 flex items-center gap-2 h-8 px-3 text-sm"
               >
-                <ArrowLeft className="h-5 w-5" />
+                <ArrowLeft className="h-4 w-4" />
                 Dashboard
               </Button>
               
@@ -102,39 +102,39 @@ export default function Account() {
           </div>
 
           {/* Content */}
-          <div className="px-6 pb-8 z-10 relative animate-fade-in">
+          <div className="px-5 pb-6 z-10 relative animate-fade-in">
             
             {/* Profile Header */}
-            <div className="bg-white/20 backdrop-blur-sm rounded-3xl p-6 mb-8 text-center">
-              <div className="bg-white/20 backdrop-blur-sm rounded-full p-4 w-20 h-20 mx-auto mb-4 flex items-center justify-center">
-                <User className="h-10 w-10 text-white" />
+            <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-4 mb-6 text-center">
+              <div className="bg-white/20 backdrop-blur-sm rounded-full p-3 w-16 h-16 mx-auto mb-3 flex items-center justify-center">
+                <User className="h-8 w-8 text-white" />
               </div>
-              <h1 className="text-2xl font-bold text-white mb-2">Praveen</h1>
-              <div className="flex items-center justify-center gap-2 mb-3">
-                <Crown className="h-5 w-5 text-yellow-400" />
-                <span className="text-white font-medium">Pro Member</span>
+              <h1 className="text-xl font-bold text-white mb-2">Praveen</h1>
+              <div className="flex items-center justify-center gap-2 mb-2">
+                <Crown className="h-4 w-4 text-yellow-400" />
+                <span className="text-white font-medium text-sm">Pro Member</span>
               </div>
-              <p className="text-white/80 text-sm">
+              <p className="text-white/80 text-xs">
                 Triathlon Health Tracker • Member since 2024
               </p>
             </div>
 
             {/* Account Options */}
-            <div className="space-y-4">
+            <div className="space-y-3">
               {accountOptions.map((option, index) => (
                 <Button
                   key={option.label}
                   onClick={() => setLocation(option.route)}
                   className="w-full h-auto p-0 bg-transparent hover:bg-transparent"
                 >
-                  <div className={`w-full bg-gradient-to-r ${option.color} rounded-2xl p-4 hover:scale-105 transition-all duration-300 shadow-lg`}>
-                    <div className="flex items-center gap-4 text-left">
-                      <div className="bg-white/20 backdrop-blur-sm rounded-xl p-3">
-                        <option.icon className="h-6 w-6 text-white" />
+                  <div className={`w-full bg-gradient-to-r ${option.color} rounded-xl p-3 hover:scale-105 transition-all duration-300 shadow-lg`}>
+                    <div className="flex items-center gap-3 text-left">
+                      <div className="bg-white/20 backdrop-blur-sm rounded-lg p-2">
+                        <option.icon className="h-5 w-5 text-white" />
                       </div>
                       <div className="flex-1">
-                        <div className="text-white font-semibold text-lg">{option.label}</div>
-                        <div className="text-white/80 text-sm">{option.description}</div>
+                        <div className="text-white font-semibold text-base">{option.label}</div>
+                        <div className="text-white/80 text-xs">{option.description}</div>
                       </div>
                     </div>
                   </div>
@@ -143,23 +143,23 @@ export default function Account() {
             </div>
 
             {/* Quick Actions */}
-            <div className="mt-8 bg-white/10 backdrop-blur-sm rounded-2xl p-6">
-              <div className="flex items-center gap-3 mb-4">
-                <Sparkles className="h-6 w-6 text-white" />
-                <h2 className="text-white text-xl font-semibold">Quick Actions</h2>
+            <div className="mt-6 bg-white/10 backdrop-blur-sm rounded-xl p-4">
+              <div className="flex items-center gap-2 mb-3">
+                <Sparkles className="h-5 w-5 text-white" />
+                <h2 className="text-white text-base font-semibold">Quick Actions</h2>
               </div>
               
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-3">
                 <Button
                   onClick={() => setLocation("/settings")}
-                  className="bg-white/10 backdrop-blur-sm text-white hover:bg-white/20 border border-white/20 rounded-xl h-12 flex flex-col items-center justify-center gap-1"
+                  className="bg-white/10 backdrop-blur-sm text-white hover:bg-white/20 border border-white/20 rounded-lg h-10 flex flex-col items-center justify-center gap-1"
                 >
                   <SettingsIcon className="h-4 w-4" />
                   <span className="text-xs">Settings</span>
                 </Button>
                 <Button
                   onClick={() => setLocation("/data")}
-                  className="bg-white/10 backdrop-blur-sm text-white hover:bg-white/20 border border-white/20 rounded-xl h-12 flex flex-col items-center justify-center gap-1"
+                  className="bg-white/10 backdrop-blur-sm text-white hover:bg-white/20 border border-white/20 rounded-lg h-10 flex flex-col items-center justify-center gap-1"
                 >
                   <Database className="h-4 w-4" />
                   <span className="text-xs">Data</span>
@@ -168,17 +168,17 @@ export default function Account() {
             </div>
 
             {/* Account Status */}
-            <div className="mt-6 bg-white/10 backdrop-blur-sm rounded-2xl p-4 text-center">
-              <Shield className="h-6 w-6 text-green-400 mx-auto mb-2" />
+            <div className="mt-4 bg-white/10 backdrop-blur-sm rounded-xl p-3 text-center">
+              <Shield className="h-5 w-5 text-green-400 mx-auto mb-2" />
               <div className="text-white text-sm font-medium mb-1">Account Secure</div>
               <div className="text-white/70 text-xs">Last login: Today at 10:02 AM</div>
             </div>
 
             {/* Logout */}
-            <div className="mt-6">
+            <div className="mt-4">
               <Button
                 onClick={() => setLocation("/api/logout")}
-                className="w-full bg-red-500/20 backdrop-blur-sm text-red-200 hover:bg-red-500/30 border border-red-500/30 rounded-xl h-10 text-sm"
+                className="w-full bg-red-500/20 backdrop-blur-sm text-red-200 hover:bg-red-500/30 border border-red-500/30 rounded-xl h-9 text-sm"
               >
                 <LogOut className="h-4 w-4 mr-2" />
                 Sign Out
