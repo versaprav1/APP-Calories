@@ -4,3 +4,16 @@ dist
 server/public
 vite.config.ts.*
 *.tar.gz
+
+# Ignore platform build directories
+/android
+/ios
+
+# Ignore common temporary files
+*.log
+*.temp
+*.tmp
+
+# Ignore IDE/config folders
+/.replit
+/.config
