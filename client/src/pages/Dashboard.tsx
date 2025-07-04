@@ -1,316 +1,325 @@
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { useLocation } from "wouter";
+import { useQuery } from "@tanstack/react-query";
+import { 
+  Activity, 
+  TrendingUp, 
+  Target, 
+  Calendar,
+  ChevronRight,
+  Waves,
+  Bike,
+  Zap,
+  Trophy,
+  Clock,
+  Flame,
+  User,
+  Settings,
+  BarChart3,
+  Plus
+} from "lucide-react";
 
 export default function Dashboard() {
   const [, setLocation] = useLocation();
+  const [greeting, setGreeting] = useState("");
+
+  const userId = 1; // Demo user ID
+
+  // Fetch real data for dashboard stats
+  const { data: swimmingStats } = useQuery({
+    queryKey: ['/api/swimming-workouts', userId],
+  });
+
+  const { data: cyclingStats } = useQuery({
+    queryKey: ['/api/cycling-workouts', userId],
+  });
+
+  const { data: runningStats } = useQuery({
+    queryKey: ['/api/running-workouts', userId],
+  });
+
+  const { data: badmintonStats } = useQuery({
+    queryKey: ['/api/badminton-sessions', userId],
+  });
+
+  const { data: weightStats } = useQuery({
+    queryKey: ['/api/weight-entries', userId],
+  });
+
+  // Set dynamic greeting
+  useEffect(() => {
+    const hour = new Date().getHours();
+    if (hour < 12) setGreeting("Good Morning");
+    else if (hour < 17) setGreeting("Good Afternoon");
+    else setGreeting("Good Evening");
+  }, []);
+
+  // Calculate weekly stats
+  const weeklyStats = {
+    totalWorkouts: (swimmingStats?.length || 0) + (cyclingStats?.length || 0) + (runningStats?.length || 0) + (badmintonStats?.length || 0),
+    totalCalories: 
+      (swimmingStats?.reduce((sum: number, w: any) => sum + (w.calories || 0), 0) || 0) +
+      (cyclingStats?.reduce((sum: number, w: any) => sum + (w.calories || 0), 0) || 0) +
+      (runningStats?.reduce((sum: number, w: any) => sum + (w.calories || 0), 0) || 0) +
+      (badmintonStats?.reduce((sum: number, w: any) => sum + (w.calories || 0), 0) || 0),
+    currentWeight: weightStats?.[0]?.weight || "75.0",
+    weeklyGoal: 5,
+  };
 
   const activities = [
     {
-      id: 1,
       title: "Swimming",
-      description: "Track your swimming sessions and technique",
-      icon: "🏊‍♂️",
-      color: "#70c1e4",
+      icon: Waves,
+      count: swimmingStats?.length || 0,
+      recent: swimmingStats?.[0] ? `${swimmingStats[0].distance}m • ${swimmingStats[0].duration}min` : "No sessions yet",
+      color: "from-blue-400 to-cyan-500",
       route: "/swimming",
-      status: "not finished"
+      bgIcon: "💧"
     },
     {
-      id: 2,
       title: "Cycling",
-      description: "Monitor cycling distance and performance",
-      icon: "🚴‍♂️", 
-      color: "#8fd4e8",
+      icon: Bike,
+      count: cyclingStats?.length || 0,
+      recent: cyclingStats?.[0] ? `${cyclingStats[0].distance}km • ${cyclingStats[0].duration}min` : "No rides yet",
+      color: "from-green-400 to-emerald-500",
       route: "/cycling",
-      status: "Ready"
+      bgIcon: "🚴‍♂️"
     },
     {
-      id: 3,
       title: "Running",
-      description: "Track running pace and achievements",
-      icon: "🏃‍♂️",
-      color: "#a4e2ec",
+      icon: Zap,
+      count: runningStats?.length || 0,
+      recent: runningStats?.[0] ? `${runningStats[0].distance}km • ${runningStats[0].duration}min` : "No runs yet",
+      color: "from-orange-400 to-red-500",
       route: "/running",
-      status: "Complete"
+      bgIcon: "🏃‍♂️"
     },
     {
-      id: 4,
       title: "Badminton",
-      description: "Track your badminton matches and skills",
-      icon: "🏸",
-      color: "#b8d4f0",
+      icon: Trophy,
+      count: badmintonStats?.length || 0,
+      recent: badmintonStats?.[0] ? `${badmintonStats[0].duration}min match` : "No matches yet",
+      color: "from-purple-400 to-pink-500",
       route: "/badminton",
-      status: "Ready"
+      bgIcon: "🏸"
     }
   ];
 
-  const otherActivities = [
-    {
-      id: 4,
-      title: "Calorie Control",
-      description: "Monitor daily calorie intake and nutrition",
-      icon: "/figmaAssets/component-2.svg",
-      color: "#b8eaf0",
-      route: "/calorie-control"
-    },
-    {
-      id: 5,
-      title: "Weight Control",
-      description: "Track weight goals and body composition",
-      icon: "/figmaAssets/component-3.svg",
-      color: "#cef3f7",
-      route: "/weight-control"
-    },
-    {
-      id: 6,
-      title: "Fitness Goals",
-      description: "Set and track your fitness objectives",
-      icon: "/figmaAssets/component-4.svg",
-      color: "#e0f8fa",
-      route: "/fitness-goals"
-    },
-    {
-      id: 7,
-      title: "Nutrition Plans",
-      description: "Follow personalized meal plans",
-      icon: "/figmaAssets/component-5.svg",
-      color: "#f0fcfd",
-      route: "/nutrition-plans"
-    }
+  const quickActions = [
+    { title: "Weight Control", icon: Target, route: "/weight-control", color: "bg-blue-500" },
+    { title: "Analytics", icon: BarChart3, route: "/analytics", color: "bg-green-500" },
+    { title: "Nutrition", icon: Flame, route: "/food-tracking", color: "bg-orange-500" },
+    { title: "Goals", icon: Trophy, route: "/goals-progress", color: "bg-purple-500" },
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#4a6bda] via-[#70c1e4] to-[#8fd4e8] p-4">
-      <div className="max-w-md mx-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-6 pt-4">
-          <div className="flex items-center space-x-3">
-            <div className="w-[50px] h-[50px] bg-white/20 rounded-full flex items-center justify-center">
-              <span className="text-white text-[20px] font-bold">P</span>
+    <div className="flex justify-center w-full bg-transparent min-h-screen">
+      <Card className="relative w-[390px] min-h-[844px] rounded-[25px] overflow-hidden border-none">
+        <div className="absolute w-full h-full bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
+          
+          {/* Header */}
+          <div className="relative px-6 pt-12 pb-6">
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900">{greeting}, Praveen</h1>
+                <p className="text-gray-600 text-sm">Ready for your next workout?</p>
+              </div>
+              <div className="flex gap-2">
+                <Button
+                  onClick={() => setLocation("/account")}
+                  variant="ghost"
+                  size="icon"
+                  className="rounded-full bg-white/80 hover:bg-white"
+                >
+                  <User className="h-5 w-5 text-gray-700" />
+                </Button>
+                <Button
+                  onClick={() => setLocation("/settings")}
+                  variant="ghost"
+                  size="icon"
+                  className="rounded-full bg-white/80 hover:bg-white"
+                >
+                  <Settings className="h-5 w-5 text-gray-700" />
+                </Button>
+              </div>
             </div>
-            <div>
-              <h2 className="text-white text-[18px] font-semibold">Praveen</h2>
-              <p className="text-white/80 text-[12px]">Triathlon Athlete</p>
+
+            {/* Weekly Overview */}
+            <div className="grid grid-cols-3 gap-3 mb-6">
+              <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-4 text-center shadow-sm">
+                <Activity className="h-6 w-6 mx-auto mb-2 text-blue-600" />
+                <div className="text-2xl font-bold text-gray-900">{weeklyStats.totalWorkouts}</div>
+                <div className="text-xs text-gray-600">Workouts</div>
+                <div className="text-xs text-blue-600 mt-1">Goal: {weeklyStats.weeklyGoal}/week</div>
+              </div>
+              <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-4 text-center shadow-sm">
+                <Flame className="h-6 w-6 mx-auto mb-2 text-orange-600" />
+                <div className="text-2xl font-bold text-gray-900">{weeklyStats.totalCalories}</div>
+                <div className="text-xs text-gray-600">Calories</div>
+                <div className="text-xs text-green-600 mt-1">+12% vs last week</div>
+              </div>
+              <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-4 text-center shadow-sm">
+                <Target className="h-6 w-6 mx-auto mb-2 text-purple-600" />
+                <div className="text-2xl font-bold text-gray-900">{weeklyStats.currentWeight}kg</div>
+                <div className="text-xs text-gray-600">Weight</div>
+                <div className="text-xs text-blue-600 mt-1">-0.5kg this week</div>
+              </div>
             </div>
           </div>
-          <div className="w-[30px] h-[30px] bg-white/20 rounded-full flex items-center justify-center">
-            <span className="text-white text-[16px]">🔔</span>
-          </div>
-        </div>
 
-        {/* Welcome */}
-        <div className="text-center mb-6">
-          <h1 className="text-white text-[28px] font-semibold mb-2">
-            Welcome Back!
-          </h1>
-          <p className="text-white/80 text-[16px]">
-            Choose your activity
-          </p>
-        </div>
-
-        {/* Triathlon Activities */}
-        <div className="mb-6">
-          <h2 className="text-white text-[20px] font-medium mb-4 text-center">
-            🏆 Triathlon Training
-          </h2>
-          <div className="space-y-3">
-            {activities.map((activity) => (
-              <div 
-                key={activity.id}
-                className="bg-white/95 rounded-[20px] p-4 shadow-lg"
+          {/* Activities */}
+          <div className="px-6 mb-6">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-semibold text-gray-900">Activities</h2>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-blue-600 hover:text-blue-700"
+                onClick={() => setLocation("/analytics")}
               >
-                <div className="flex items-center space-x-4">
-                  <div 
-                    className="w-[50px] h-[50px] rounded-full flex items-center justify-center text-[24px]"
-                    style={{ backgroundColor: activity.color }}
-                  >
-                    {activity.icon}
+                View All
+                <ChevronRight className="h-4 w-4 ml-1" />
+              </Button>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              {activities.map((activity) => (
+                <div
+                  key={activity.title}
+                  onClick={() => setLocation(activity.route)}
+                  className="relative bg-white/90 backdrop-blur-sm rounded-2xl p-4 shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer group overflow-hidden"
+                >
+                  {/* Background gradient */}
+                  <div className={`absolute inset-0 bg-gradient-to-br ${activity.color} opacity-0 group-hover:opacity-10 transition-opacity duration-200`} />
+                  
+                  {/* Background icon */}
+                  <div className="absolute -top-2 -right-2 text-6xl opacity-5">
+                    {activity.bgIcon}
                   </div>
                   
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                      <h3 className="text-[#4a6bda] text-[16px] font-semibold">
-                        {activity.title}
-                      </h3>
-                      <span className={`px-2 py-1 rounded-full text-[10px] font-medium ${
-                        activity.status === 'Complete' ? 'bg-green-100 text-green-600' : 
-                        activity.status === 'not finished' ? 'bg-red-100 text-red-600' :
-                        'bg-blue-100 text-blue-600'
-                      }`}>
-                        {activity.status}
+                  <div className="relative">
+                    <div className="flex items-center justify-between mb-3">
+                      <activity.icon className="h-6 w-6 text-gray-700" />
+                      <span className="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded-full">
+                        {activity.count} this week
                       </span>
                     </div>
-                    <p className="text-[#707070] text-[12px] leading-relaxed">
-                      {activity.description}
-                    </p>
+                    <h3 className="font-semibold text-gray-900 mb-1">{activity.title}</h3>
+                    <p className="text-xs text-gray-600 leading-relaxed">{activity.recent}</p>
                   </div>
-                  
-                  <Button
-                    onClick={() => setLocation(activity.route)}
-                    className="w-[70px] h-[30px] rounded-[15px] text-[12px] font-medium hover:opacity-80"
-                    style={{ 
-                      backgroundColor: activity.color,
-                      color: "#4a6bda"
-                    }}
-                  >
-                    Start
-                  </Button>
                 </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Quick Actions */}
-        <div className="mb-6">
-          <h2 className="text-white text-[18px] font-medium mb-3 text-center">
-            ⚡ Quick Actions
-          </h2>
-          <div className="grid grid-cols-2 gap-3">
-            <div 
-              onClick={() => setLocation("/workout-setup")}
-              className="bg-white/90 rounded-[15px] p-3 shadow-sm cursor-pointer hover:bg-white transition-colors"
-            >
-              <div className="text-center">
-                <div className="w-[40px] h-[40px] rounded-full bg-orange-200 flex items-center justify-center mx-auto mb-2">
-                  <span className="text-[20px]">📝</span>
-                </div>
-                <h3 className="text-[#4a6bda] text-[14px] font-semibold mb-1">Log Workout</h3>
-                <p className="text-[#707070] text-[10px] leading-tight">Add exercise data</p>
-              </div>
-            </div>
-            
-            <div 
-              onClick={() => setLocation("/calorie-logging")}
-              className="bg-white/90 rounded-[15px] p-3 shadow-sm cursor-pointer hover:bg-white transition-colors"
-            >
-              <div className="text-center">
-                <div className="w-[40px] h-[40px] rounded-full bg-teal-200 flex items-center justify-center mx-auto mb-2">
-                  <span className="text-[20px]">🍽️</span>
-                </div>
-                <h3 className="text-[#4a6bda] text-[14px] font-semibold mb-1">Log Calories</h3>
-                <p className="text-[#707070] text-[10px] leading-tight">Track meals</p>
-              </div>
+              ))}
             </div>
           </div>
-        </div>
 
-        {/* Health Activities */}
-        <div className="mb-6">
-          <h2 className="text-white text-[18px] font-medium mb-3 text-center">
-            📊 Health Tracking
-          </h2>
-          <div className="grid grid-cols-2 gap-3">
-            {otherActivities.map((activity) => (
-              <div 
-                key={activity.id}
-                className="bg-white/90 rounded-[15px] p-3 shadow-sm"
+          {/* Quick Actions */}
+          <div className="px-6 mb-6">
+            <h2 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h2>
+            <div className="grid grid-cols-4 gap-3">
+              {quickActions.map((action) => (
+                <div
+                  key={action.title}
+                  onClick={() => setLocation(action.route)}
+                  className="bg-white/90 backdrop-blur-sm rounded-2xl p-4 text-center shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer group"
+                >
+                  <div className={`${action.color} rounded-xl p-3 mx-auto mb-2 w-fit group-hover:scale-110 transition-transform duration-200`}>
+                    <action.icon className="h-5 w-5 text-white" />
+                  </div>
+                  <div className="text-xs font-medium text-gray-700">{action.title}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Recent Activity */}
+          <div className="px-6 mb-6">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-semibold text-gray-900">Today's Progress</h2>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-blue-600 hover:text-blue-700"
               >
-                <div className="text-center">
-                  <div 
-                    className="w-[40px] h-[40px] rounded-full flex items-center justify-center mx-auto mb-2"
-                    style={{ backgroundColor: activity.color }}
-                  >
-                    <img
-                      src={activity.icon}
-                      alt={activity.title}
-                      className="w-[24px] h-[24px]"
-                    />
+                <Plus className="h-4 w-4 mr-1" />
+                Add Workout
+              </Button>
+            </div>
+
+            <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-4 shadow-sm">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-3">
+                  <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl p-2">
+                    <Calendar className="h-5 w-5 text-white" />
                   </div>
-                  
-                  <h3 className="text-[#4a6bda] text-[14px] font-semibold mb-1">
-                    {activity.title}
-                  </h3>
-                  <p className="text-[#707070] text-[10px] leading-tight mb-2">
-                    {activity.description}
+                  <div>
+                    <h3 className="font-semibold text-gray-900">Daily Goal Progress</h3>
+                    <p className="text-xs text-gray-600">Stay consistent with your training</p>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <div className="text-sm font-semibold text-blue-600">
+                    {Math.round((weeklyStats.totalWorkouts / weeklyStats.weeklyGoal) * 100)}%
+                  </div>
+                  <div className="text-xs text-gray-600">Complete</div>
+                </div>
+              </div>
+              
+              <div className="w-full bg-gray-200 rounded-full h-2 mb-3">
+                <div 
+                  className="bg-gradient-to-r from-blue-500 to-purple-600 h-2 rounded-full transition-all duration-500"
+                  style={{ width: `${Math.min((weeklyStats.totalWorkouts / weeklyStats.weeklyGoal) * 100, 100)}%` }}
+                />
+              </div>
+
+              <div className="grid grid-cols-3 gap-4 text-center">
+                <div>
+                  <div className="text-lg font-bold text-gray-900">{weeklyStats.totalWorkouts}</div>
+                  <div className="text-xs text-gray-600">Workouts</div>
+                </div>
+                <div>
+                  <div className="text-lg font-bold text-gray-900">{Math.round(weeklyStats.totalCalories / 7)}</div>
+                  <div className="text-xs text-gray-600">Avg Calories</div>
+                </div>
+                <div>
+                  <div className="text-lg font-bold text-gray-900">
+                    {weeklyStats.totalWorkouts > 0 ? Math.round(weeklyStats.totalWorkouts * 7 / 7) : 0}
+                  </div>
+                  <div className="text-xs text-gray-600">Streak Days</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Motivational Section */}
+          <div className="px-6 pb-8">
+            <div className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-2xl p-6 text-white shadow-lg">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-lg font-bold mb-1">Keep Pushing Forward!</h3>
+                  <p className="text-sm opacity-90 mb-3">
+                    You're doing great! Every workout brings you closer to your goals.
                   </p>
-                  
                   <Button
-                    onClick={() => setLocation(activity.route)}
-                    className="w-full h-[25px] rounded-[12px] text-[11px] font-medium hover:opacity-80"
-                    style={{ 
-                      backgroundColor: activity.color,
-                      color: "#4a6bda"
-                    }}
+                    onClick={() => setLocation("/swimming")}
+                    variant="secondary"
+                    size="sm"
+                    className="bg-white/20 hover:bg-white/30 text-white border-white/30"
                   >
-                    Open
+                    Start Workout
+                    <ChevronRight className="h-4 w-4 ml-1" />
                   </Button>
                 </div>
+                <div className="text-6xl opacity-20">
+                  🏆
+                </div>
               </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Stats */}
-        <div className="mb-6 bg-white/10 rounded-[20px] p-4">
-          <h3 className="text-white text-[16px] font-medium mb-3 text-center">
-            Today's Progress
-          </h3>
-          <div className="flex justify-around">
-            <div className="text-center">
-              <div className="text-white text-[20px] font-bold">1,250</div>
-              <div className="text-white/70 text-[12px]">Calories</div>
-            </div>
-            <div className="text-center">
-              <div className="text-white text-[20px] font-bold">65g</div>
-              <div className="text-white/70 text-[12px]">Protein</div>
-            </div>
-            <div className="text-center">
-              <div className="text-white text-[20px] font-bold">2.1km</div>
-              <div className="text-white/70 text-[12px]">Distance</div>
             </div>
           </div>
-        </div>
 
-        {/* Logout */}
-        <div className="flex justify-center pb-20">
-          <Button
-            variant="outline"
-            onClick={() => setLocation("/")}
-            className="w-[140px] h-[40px] rounded-[25px] bg-white/10 border-white/30 text-white text-[14px] font-medium hover:bg-white/20"
-          >
-            Logout
-          </Button>
         </div>
-
-        {/* Bottom Navigation */}
-        <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200">
-          <div className="max-w-md mx-auto">
-            <div className="flex justify-around py-2">
-              <button 
-                onClick={() => setLocation("/dashboard")}
-                className="flex flex-col items-center py-2 px-4"
-              >
-                <div className="w-6 h-6 mb-1">🏠</div>
-                <span className="text-[10px] text-[#70c1e4] font-medium">Home</span>
-              </button>
-              
-              <button 
-                onClick={() => setLocation("/account")}
-                className="flex flex-col items-center py-2 px-4"
-              >
-                <div className="w-6 h-6 mb-1">👤</div>
-                <span className="text-[10px] text-gray-600">Account</span>
-              </button>
-              
-              <button 
-                onClick={() => setLocation("/activity")}
-                className="flex flex-col items-center py-2 px-4"
-              >
-                <div className="w-6 h-6 mb-1">📊</div>
-                <span className="text-[10px] text-gray-600">Activity</span>
-              </button>
-              
-              <button 
-                onClick={() => setLocation("/resources")}
-                className="flex flex-col items-center py-2 px-4"
-              >
-                <div className="w-6 h-6 mb-1">📚</div>
-                <span className="text-[10px] text-gray-600">Resources</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
+      </Card>
     </div>
   );
 }
