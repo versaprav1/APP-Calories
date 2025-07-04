@@ -143,7 +143,7 @@ export default function Login() {
                   type="text"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  className="w-full h-[60px] rounded-2xl bg-white/10 backdrop-blur-sm border-white/20 text-white placeholder:text-white/60 text-lg px-4 focus:bg-white/20 focus:border-white/40"
+                  className="w-full h-[50px] rounded-xl bg-white/10 backdrop-blur-sm border-white/20 text-white placeholder:text-white/60 text-base px-4 focus:bg-white/20 focus:border-white/40"
                   placeholder="Enter your username"
                 />
               </div>
@@ -160,7 +160,7 @@ export default function Login() {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full h-[60px] rounded-2xl bg-white/10 backdrop-blur-sm border-white/20 text-white placeholder:text-white/60 text-lg px-4 focus:bg-white/20 focus:border-white/40"
+                  className="w-full h-[50px] rounded-xl bg-white/10 backdrop-blur-sm border-white/20 text-white placeholder:text-white/60 text-base px-4 focus:bg-white/20 focus:border-white/40"
                   placeholder="Enter your password"
                 />
               </div>
@@ -169,18 +169,18 @@ export default function Login() {
                 <Button
                   type="submit"
                   disabled={loginMutation.isPending}
-                  className="w-full h-[60px] rounded-2xl bg-white text-gray-900 hover:bg-white/90 text-lg font-semibold shadow-lg transition-all duration-300 hover:scale-105"
+                  className="w-full h-[50px] rounded-xl bg-white text-gray-900 hover:bg-white/90 text-base font-semibold shadow-lg transition-all duration-300 hover:scale-[1.02]"
                 >
                   <div className="flex items-center justify-center gap-2">
                     {loginMutation.isPending ? (
                       <>
-                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-gray-900" />
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-900" />
                         Signing in...
                       </>
                     ) : (
                       <>
                         Sign In
-                        <ArrowRight className="h-5 w-5" />
+                        <ArrowRight className="h-4 w-4" />
                       </>
                     )}
                   </div>
@@ -192,7 +192,7 @@ export default function Login() {
                     type="button"
                     variant="ghost"
                     onClick={() => setLocation("/register")}
-                    className="text-white hover:bg-white/20 underline text-base"
+                    className="text-white hover:bg-white/20 underline text-sm h-8"
                   >
                     Create Account
                   </Button>

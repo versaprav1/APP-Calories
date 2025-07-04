@@ -183,9 +183,9 @@ export default function Swimming() {
             <div className="mb-4">
               <Button
                 onClick={() => setShowAddForm(!showAddForm)}
-                className="w-full bg-white text-[#4a6bda] hover:bg-white/90 rounded-[15px] py-3"
+                className="w-full bg-white text-[#4a6bda] hover:bg-white/90 rounded-xl h-10 text-sm"
               >
-                <Plus className="h-5 w-5 mr-2" />
+                <Plus className="h-4 w-4 mr-2" />
                 {showAddForm ? "Cancel" : "Add Swimming Session"}
               </Button>
             </div>
@@ -288,7 +288,7 @@ export default function Swimming() {
                   <Button
                     onClick={handleSubmit}
                     disabled={createWorkoutMutation.isPending}
-                    className="w-full bg-[#4a6bda] hover:bg-[#3a5bc8] text-white rounded-[15px] py-3"
+                    className="w-full bg-[#4a6bda] hover:bg-[#3a5bc8] text-white rounded-xl h-10 text-sm"
                   >
                     {createWorkoutMutation.isPending ? "Adding..." : "Add Session"}
                   </Button>

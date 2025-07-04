@@ -195,9 +195,9 @@ export default function Onboarding() {
                 <Button
                   onClick={prevSlide}
                   variant="ghost"
-                  className="text-white hover:bg-white/20 flex items-center gap-2"
+                  className="text-white hover:bg-white/20 h-10 px-4 text-sm"
                 >
-                  <ChevronRight className="h-4 w-4 rotate-180" />
+                  <ChevronRight className="h-4 w-4 rotate-180 mr-1" />
                   Previous
                 </Button>
               ) : (
@@ -207,18 +207,18 @@ export default function Onboarding() {
               {currentSlideData.isLastSlide ? (
                 <Button
                   onClick={handleGetStarted}
-                  className="bg-white text-gray-900 hover:bg-white/90 px-8 py-3 rounded-2xl font-semibold shadow-lg"
+                  className="bg-white text-gray-900 hover:bg-white/90 h-10 px-6 rounded-xl font-semibold shadow-lg text-sm"
                 >
                   Get Started
-                  <ChevronRight className="h-5 w-5 ml-2" />
+                  <ChevronRight className="h-4 w-4 ml-1" />
                 </Button>
               ) : (
                 <Button
                   onClick={nextSlide}
-                  className="bg-white/20 backdrop-blur-sm text-white hover:bg-white/30 border border-white/30 px-8 py-3 rounded-2xl font-semibold flex items-center gap-2"
+                  className="bg-white/20 backdrop-blur-sm text-white hover:bg-white/30 border border-white/30 h-10 px-6 rounded-xl font-semibold text-sm"
                 >
                   Next
-                  <ChevronRight className="h-5 w-5" />
+                  <ChevronRight className="h-4 w-4 ml-1" />
                 </Button>
               )}
             </div>

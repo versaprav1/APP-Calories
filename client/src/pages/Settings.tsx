@@ -210,7 +210,7 @@ export default function Settings() {
               </div>
               <Button
                 onClick={() => setLocation("/profile-setup")}
-                className="w-full bg-white/20 backdrop-blur-sm text-white hover:bg-white/30 border border-white/30 rounded-xl"
+                className="w-full bg-white/20 backdrop-blur-sm text-white hover:bg-white/30 border border-white/30 rounded-xl h-10 text-sm"
               >
                 Edit Profile
               </Button>

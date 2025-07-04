@@ -152,16 +152,16 @@ export default function Account() {
               <div className="grid grid-cols-2 gap-4">
                 <Button
                   onClick={() => setLocation("/settings")}
-                  className="bg-white/10 backdrop-blur-sm text-white hover:bg-white/20 border border-white/20 rounded-xl h-16 flex flex-col items-center justify-center gap-1"
+                  className="bg-white/10 backdrop-blur-sm text-white hover:bg-white/20 border border-white/20 rounded-xl h-12 flex flex-col items-center justify-center gap-1"
                 >
-                  <SettingsIcon className="h-5 w-5" />
+                  <SettingsIcon className="h-4 w-4" />
                   <span className="text-xs">Settings</span>
                 </Button>
                 <Button
                   onClick={() => setLocation("/data")}
-                  className="bg-white/10 backdrop-blur-sm text-white hover:bg-white/20 border border-white/20 rounded-xl h-16 flex flex-col items-center justify-center gap-1"
+                  className="bg-white/10 backdrop-blur-sm text-white hover:bg-white/20 border border-white/20 rounded-xl h-12 flex flex-col items-center justify-center gap-1"
                 >
-                  <Database className="h-5 w-5" />
+                  <Database className="h-4 w-4" />
                   <span className="text-xs">Data</span>
                 </Button>
               </div>
@@ -178,9 +178,9 @@ export default function Account() {
             <div className="mt-6">
               <Button
                 onClick={() => setLocation("/api/logout")}
-                className="w-full bg-red-500/20 backdrop-blur-sm text-red-200 hover:bg-red-500/30 border border-red-500/30 rounded-xl h-12 flex items-center justify-center gap-2"
+                className="w-full bg-red-500/20 backdrop-blur-sm text-red-200 hover:bg-red-500/30 border border-red-500/30 rounded-xl h-10 text-sm"
               >
-                <LogOut className="h-5 w-5" />
+                <LogOut className="h-4 w-4 mr-2" />
                 Sign Out
               </Button>
             </div>

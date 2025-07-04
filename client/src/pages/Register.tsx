@@ -149,7 +149,7 @@ export default function Register() {
                   type="text"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  className="w-full h-[60px] rounded-2xl bg-white/10 backdrop-blur-sm border-white/20 text-white placeholder:text-white/60 text-lg px-4 focus:bg-white/20 focus:border-white/40"
+                  className="w-full h-[50px] rounded-xl bg-white/10 backdrop-blur-sm border-white/20 text-white placeholder:text-white/60 text-base px-4 focus:bg-white/20 focus:border-white/40"
                   placeholder="Choose a username"
                 />
               </div>
@@ -166,37 +166,39 @@ export default function Register() {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full h-[60px] rounded-2xl bg-white/10 backdrop-blur-sm border-white/20 text-white placeholder:text-white/60 text-lg px-4 focus:bg-white/20 focus:border-white/40"
+                  className="w-full h-[50px] rounded-xl bg-white/10 backdrop-blur-sm border-white/20 text-white placeholder:text-white/60 text-base px-4 focus:bg-white/20 focus:border-white/40"
                   placeholder="Create a secure password"
                 />
               </div>
 
-              <div className="flex flex-col items-center gap-6 pt-8">
+              <div className="pt-8 space-y-6">
                 <Button
                   type="submit"
                   disabled={registerMutation.isPending}
-                  className="w-full h-[60px] rounded-2xl bg-white text-gray-900 hover:bg-white/90 text-lg font-semibold shadow-lg flex items-center justify-center gap-2 transition-all duration-300 hover:scale-105"
+                  className="w-full h-[50px] rounded-xl bg-white text-gray-900 hover:bg-white/90 text-base font-semibold shadow-lg transition-all duration-300 hover:scale-[1.02]"
                 >
-                  {registerMutation.isPending ? (
-                    <>
-                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-gray-900" />
-                      Creating Account...
-                    </>
-                  ) : (
-                    <>
-                      Create Account
-                      <ArrowRight className="h-5 w-5" />
-                    </>
-                  )}
+                  <div className="flex items-center justify-center gap-2">
+                    {registerMutation.isPending ? (
+                      <>
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-900" />
+                        Creating Account...
+                      </>
+                    ) : (
+                      <>
+                        Create Account
+                        <ArrowRight className="h-4 w-4" />
+                      </>
+                    )}
+                  </div>
                 </Button>
                 
                 <div className="text-center">
-                  <p className="text-white/80 text-sm mb-2">Already have an account?</p>
+                  <p className="text-white/80 text-sm mb-3">Already have an account?</p>
                   <Button
                     type="button"
                     variant="ghost"
                     onClick={() => setLocation("/login")}
-                    className="text-white hover:bg-white/20 underline"
+                    className="text-white hover:bg-white/20 underline text-sm h-8"
                   >
                     Sign In
                   </Button>
