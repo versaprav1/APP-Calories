@@ -29,6 +29,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const user = await storage.createUser(userData);
       res.json({ id: user.id, username: user.username });
     } catch (error) {
+      console.error(error);
       if (error instanceof z.ZodError) {
         return res.status(400).json({ error: "Invalid input", details: error.errors });
       }
@@ -48,6 +49,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       res.json({ id: user.id, username: user.username });
     } catch (error) {
+      console.error(error);
       if (error instanceof z.ZodError) {
         return res.status(400).json({ error: "Invalid input", details: error.errors });
       }

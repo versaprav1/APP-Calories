@@ -36,6 +36,16 @@ app.use((req, res, next) => {
   next();
 });
 
+// Add handlers for uncaught exceptions and unhandled rejections
+process.on('uncaughtException', (err) => {
+  console.error('Uncaught Exception:', err);
+  process.exit(1); // Exit the process after logging
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+});
+
 (async () => {
   const server = await registerRoutes(app);
 
