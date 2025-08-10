@@ -90,15 +90,11 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
-    try {
-      const [user] = await db
-        .insert(users)
-        .values(insertUser)
-        .returning();
-    } catch (error) {
-      console.error(error);
-    }
-    return user;
+    const [createdUser] = await db
+      .insert(users)
+      .values(insertUser)
+      .returning();
+    return createdUser;
   }
 
   async updateUserProfile(id: number, profile: UpdateUserProfile): Promise<User> {

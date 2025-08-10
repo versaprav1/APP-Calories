@@ -73,6 +73,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const foodData = insertFoodEntrySchema.parse({
         ...req.body,
+        mealType: req.body?.mealType ?? 'meal',
         userId: 1 // For demo purposes, using userId 1
       });
       

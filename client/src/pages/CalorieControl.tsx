@@ -34,23 +34,23 @@ export default function CalorieControl() {
 
   const addFoodMutation = useMutation({
     mutationFn: async (foodData: { name: string; calories: number; quantity: number }) => {
-      const response = await apiRequest("POST", "/api/food-entries", foodData);
+      const response = await apiRequest('/api/food-entries', 'POST', foodData);
       return response.json();
     },
     onSuccess: () => {
       toast({
-        title: "Food entry added successfully!",
+        title: 'Food entry added successfully!',
       });
-      setFoodName("");
-      setCalories("");
-      setQuantity("1");
+      setFoodName('');
+      setCalories('');
+      setQuantity('1');
       queryClient.invalidateQueries({ queryKey: ['/api/food-entries'] });
     },
     onError: (error: any) => {
       toast({
-        title: "Failed to add food entry",
+        title: 'Failed to add food entry',
         description: error.message,
-        variant: "destructive",
+        variant: 'destructive',
       });
     },
   });

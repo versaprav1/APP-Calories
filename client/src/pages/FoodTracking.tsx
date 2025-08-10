@@ -34,34 +34,34 @@ export default function FoodTracking() {
 
   const addFoodMutation = useMutation({
     mutationFn: async (foodData: { name: string; calories: number; quantity: number }) => {
-      const response = await apiRequest("POST", "/api/food-entries", foodData);
+      const response = await apiRequest('/api/food-entries', 'POST', foodData);
       return response.json();
     },
     onSuccess: () => {
       toast({
-        title: "Food entry added successfully!",
+        title: 'Food entry added successfully!',
       });
-      setFoodName("");
-      setCalories("");
-      setQuantity("1");
+      setFoodName('');
+      setCalories('');
+      setQuantity('1');
       queryClient.invalidateQueries({ queryKey: ['/api/food-entries'] });
     },
     onError: (error: any) => {
       toast({
-        title: "Failed to add food entry",
+        title: 'Failed to add food entry',
         description: error.message,
-        variant: "destructive",
+        variant: 'destructive',
       });
     },
   });
 
   const deleteFoodMutation = useMutation({
     mutationFn: async (id: number) => {
-      await apiRequest("DELETE", `/api/food-entries/${id}`);
+      await apiRequest(`/api/food-entries/${id}`, 'DELETE');
     },
     onSuccess: () => {
       toast({
-        title: "Food entry deleted",
+        title: 'Food entry deleted',
       });
       queryClient.invalidateQueries({ queryKey: ['/api/food-entries'] });
     },
