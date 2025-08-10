@@ -1,115 +1,126 @@
-import { pgTable, text, serial, integer, boolean, timestamp, decimal, varchar } from "drizzle-orm/pg-core";
+import { sqliteTable, text, integer, real } from "drizzle-orm/sqlite-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
-export const users = pgTable("users", {
-  id: serial("id").primaryKey(),
+// NOTE: Removed `timestamp` and `decimal` imports from "drizzle-orm/pg-core"
+// import { timestamp, decimal } from "drizzle-orm/pg-core";
+
+export const users = sqliteTable("users", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
   username: text("username").notNull().unique(),
   password: text("password").notNull(),
   firstName: text("first_name"),
   lastName: text("last_name"),
   email: text("email"),
-  dateOfBirth: timestamp("date_of_birth"),
+  dateOfBirth: text("date_of_birth"), // Storing date as text for SQLite is fine
   height: integer("height"), // in cm
-  weight: decimal("weight", { precision: 5, scale: 2 }), // in kg
-  fitnessLevel: varchar("fitness_level", { length: 20 }), // beginner, intermediate, advanced
-  goals: text("goals").array(),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
+  weight: real("weight"), // in kg, using real for decimal in SQLite
+  fitnessLevel: text("fitness_level"), // beginner, intermediate, advanced
+  // FIX: Storing array-like data as JSON text
+  goals: text("goals", { mode: "json" }).$type<string[]>(),
+  // FIX: Using integer with mode 'timestamp' for SQLite compatibility
+  createdAt: integer("created_at", { mode: "timestamp" }).defaultNow().notNull(),
 });
 
-export const foodEntries = pgTable("food_entries", {
-  id: serial("id").primaryKey(),
+export const foodEntries = sqliteTable("food_entries", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
   name: text("name").notNull(),
   calories: integer("calories").notNull(),
   quantity: integer("quantity").notNull().default(1),
-  mealType: varchar("meal_type", { length: 20 }).notNull(), // breakfast, lunch, dinner, snack
+  mealType: text("meal_type").notNull(), // breakfast, lunch, dinner, snack
   userId: integer("user_id").notNull(),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
+  // FIX: Using integer with mode 'timestamp_ms' to store as a number
+  createdAt: integer("created_at", { mode: 'timestamp_ms' }).default(new Date()).notNull(),
 });
 
 // Swimming workouts
-export const swimmingWorkouts = pgTable("swimming_workouts", {
-  id: serial("id").primaryKey(),
+export const swimmingWorkouts = sqliteTable("swimming_workouts", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
   userId: integer("user_id").notNull(),
   duration: integer("duration").notNull(), // in minutes
   distance: integer("distance").notNull(), // in meters
   strokes: integer("strokes"),
   poolLength: integer("pool_length").default(25), // in meters
-  strokeType: varchar("stroke_type", { length: 20 }), // freestyle, backstroke, etc
+  strokeType: text("stroke_type"), // freestyle, backstroke, etc
   calories: integer("calories"),
   notes: text("notes"),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
+  // FIX: Using integer with mode 'timestamp' for SQLite compatibility
+  createdAt: integer("created_at", { mode: "timestamp" }).defaultNow().notNull(),
 });
 
 // Cycling workouts
-export const cyclingWorkouts = pgTable("cycling_workouts", {
-  id: serial("id").primaryKey(),
+export const cyclingWorkouts = sqliteTable("cycling_workouts", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
   userId: integer("user_id").notNull(),
   duration: integer("duration").notNull(), // in minutes
-  distance: decimal("distance", { precision: 6, scale: 2 }).notNull(), // in km
-  avgSpeed: decimal("avg_speed", { precision: 4, scale: 2 }), // in km/h
-  maxSpeed: decimal("max_speed", { precision: 4, scale: 2 }), // in km/h
+  distance: real("distance").notNull(), // in km
+  avgSpeed: real("avg_speed"), // in km/h
+  maxSpeed: real("max_speed"), // in km/h
   elevation: integer("elevation"), // in meters
   calories: integer("calories"),
   route: text("route"),
   notes: text("notes"),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
+  createdAt: integer("created_at", { mode: 'timestamp_ms' }).default(new Date()).notNull(),
 });
 
 // Running workouts
-export const runningWorkouts = pgTable("running_workouts", {
-  id: serial("id").primaryKey(),
+export const runningWorkouts = sqliteTable("running_workouts", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
   userId: integer("user_id").notNull(),
   duration: integer("duration").notNull(), // in minutes
-  distance: decimal("distance", { precision: 6, scale: 2 }).notNull(), // in km
-  avgPace: varchar("avg_pace", { length: 10 }), // format: MM:SS per km
-  maxPace: varchar("max_pace", { length: 10 }), // format: MM:SS per km
+  distance: real("distance").notNull(), // in km
+  avgPace: text("avg_pace"), // format: MM:SS per km
+  maxPace: text("max_pace"), // format: MM:SS per km
   elevation: integer("elevation"), // in meters
   calories: integer("calories"),
   route: text("route"),
-  weatherConditions: varchar("weather_conditions", { length: 50 }),
+  weatherConditions: text("weather_conditions"),
   notes: text("notes"),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
+  createdAt: integer("created_at", { mode: "timestamp" }).defaultNow().notNull(),
 });
 
 // Badminton sessions
-export const badmintonSessions = pgTable("badminton_sessions", {
-  id: serial("id").primaryKey(),
+export const badmintonSessions = sqliteTable("badminton_sessions", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
   userId: integer("user_id").notNull(),
   duration: integer("duration").notNull(), // in minutes
   opponent: text("opponent"),
-  matchResult: varchar("match_result", { length: 10 }), // win, loss, draw
-  sets: text("sets"), // JSON string of set scores
+  matchResult: text("match_result"), // win, loss, draw
+  sets: text("sets", { mode: 'json' }), // Store as JSON
   calories: integer("calories"),
-  skillsFocused: text("skills_focused").array(),
+  skillsFocused: text("skills_focused", { mode: 'json' }), // Store as JSON
   notes: text("notes"),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
+  createdAt: integer("created_at", { mode: 'timestamp_ms' }).default(new Date()).notNull(),
 });
 
 // User goals and progress tracking
-export const userGoals = pgTable("user_goals", {
-  id: serial("id").primaryKey(),
+export const userGoals = sqliteTable("user_goals", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
   userId: integer("user_id").notNull(),
-  activityType: varchar("activity_type", { length: 20 }).notNull(), // swimming, cycling, running, badminton
-  goalType: varchar("goal_type", { length: 20 }).notNull(), // distance, time, frequency, weight_loss
-  targetValue: decimal("target_value", { precision: 10, scale: 2 }).notNull(),
-  currentValue: decimal("current_value", { precision: 10, scale: 2 }).default('0'),
-  targetDate: timestamp("target_date"),
-  isCompleted: boolean("is_completed").default(false),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  activityType: text("activity_type").notNull(), // swimming, cycling, running, badminton
+  goalType: text("goal_type").notNull(), // distance, time, frequency, weight_loss
+  targetValue: real("target_value").notNull(),
+  currentValue: real("current_value"),
+  targetDate: text("target_date"),
+  // FIX: Correctly defining a boolean for SQLite
+  isCompleted: integer("is_completed", { mode: "boolean" }).default(false),
+  // FIX: Using integer with mode 'timestamp' for both createdAt and updatedAt
+  createdAt: integer("created_at", { mode: "timestamp" }).defaultNow().notNull(),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).defaultNow().notNull(),
 });
 
 // Weight tracking
-export const weightEntries = pgTable("weight_entries", {
-  id: serial("id").primaryKey(),
+export const weightEntries = sqliteTable("weight_entries", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
   userId: integer("user_id").notNull(),
-  weight: decimal("weight", { precision: 5, scale: 2 }).notNull(), // in kg
-  bodyFatPercentage: decimal("body_fat_percentage", { precision: 4, scale: 2 }),
-  muscleMass: decimal("muscle_mass", { precision: 5, scale: 2 }),
+  weight: real("weight").notNull(), // in kg
+  bodyFatPercentage: real("body_fat_percentage"),
+  muscleMass: real("muscle_mass"),
   notes: text("notes"),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
+  createdAt: integer("created_at", { mode: 'timestamp_ms' }).default(new Date()).notNull(),
 });
+
+// --- Insert Schemas and Types (No changes needed here, but they rely on the fixes above) ---
 
 // Insert schemas
 export const insertUserSchema = createInsertSchema(users).pick({
@@ -139,7 +150,7 @@ export const insertFoodEntrySchema = createInsertSchema(foodEntries).pick({
 export const insertSwimmingWorkoutSchema = createInsertSchema(swimmingWorkouts).pick({
   userId: true,
   duration: true,
-  distance: true,
+  distance: true, // Added distance as it is notNull
   strokes: true,
   poolLength: true,
   strokeType: true,

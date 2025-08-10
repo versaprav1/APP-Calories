@@ -80,9 +80,9 @@ export default function Register() {
           </div>
 
           {/* Header */}
-          <div className="relative px-6 pt-12 pb-6 z-10">
+          <div className="relative px-6 pt-6 pb-6 z-10">
             <div className="flex justify-between items-center mb-8">
-              <Button
+              <Button 
                 onClick={() => setLocation("/")}
                 variant="ghost"
                 className="text-white hover:bg-white/20 flex items-center gap-2"
@@ -102,7 +102,7 @@ export default function Register() {
           </div>
 
           {/* Content */}
-          <div className="px-6 pb-8 z-10 relative animate-fade-in">
+          <div className="px-6 pb-0 z-10 relative animate-fade-in">
             
             {/* Icon */}
             <div className="flex justify-center mb-8">
@@ -136,8 +136,8 @@ export default function Register() {
             </div>
 
             {/* Registration Form */}
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="space-y-2">
+            <form onSubmit={handleSubmit} className="space-y-2">
+              <div className="space-y-1">
                 <div className="flex items-center gap-2">
                   <User className="h-5 w-5 text-white/80" />
                   <Label htmlFor="username" className="text-white text-lg font-medium">
@@ -154,7 +154,7 @@ export default function Register() {
                 />
               </div>
               
-              <div className="space-y-2">
+              <div className="space-y-1">
                 <div className="flex items-center gap-2">
                   <Lock className="h-5 w-5 text-white/80" />
                   <Label htmlFor="password" className="text-white text-lg font-medium">
@@ -171,11 +171,11 @@ export default function Register() {
                 />
               </div>
 
-              <div className="pt-8 space-y-6">
+              <div className="pt-4 space-y-2">
                 <Button
                   type="submit"
                   disabled={registerMutation.isPending}
-                  className="w-full h-[50px] rounded-xl bg-white text-gray-900 hover:bg-white/90 text-base font-semibold shadow-lg transition-all duration-300 hover:scale-[1.02]"
+                  className="w-full h-[40px] rounded-xl bg-white text-gray-900 hover:bg-white/90 text-base font-semibold shadow-lg transition-all duration-300 hover:scale-[1.02]"
                 >
                   <div className="flex items-center justify-center gap-2">
                     {registerMutation.isPending ? (
