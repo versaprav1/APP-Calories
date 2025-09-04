@@ -1,29 +1,40 @@
-import Database from 'better-sqlite3';
-import { drizzle } from 'drizzle-orm/better-sqlite3';
-import * as schema from "../shared/schema";
-import fs from 'node:fs';      // <-- ADD THIS LINE
-import path from 'node:path';  // <-- ADD THIS LINE
+import fs from 'node:fs';
+import path from 'node:path';
 
-// Allow running without env by defaulting to a local .sqlite path
-const defaultDbPath = path.resolve(process.cwd(), '.sqlite', 'db.sqlite');
-const databaseUrl = process.env.DATABASE_URL && process.env.DATABASE_URL.startsWith('sqlite://')
-  ? process.env.DATABASE_URL
-  : `sqlite://${defaultDbPath}`;
+// Determine database type and create appropriate connection
+const databaseUrl = process.env.DATABASE_URL || 'sqlite://./.sqlite/db.sqlite';
+const isPostgres = databaseUrl.startsWith('postgres://') || databaseUrl.startsWith('postgresql://');
 
-const dbPath = databaseUrl.replace('sqlite://', '');
+let db: any;
 
-// --- START: ADDED CODE ---
-// Get the directory of the database file, e.g., /home/user/APP-Calories/.sqlite
-const dbDir = path.dirname(dbPath);
+if (isPostgres) {
+  // PostgreSQL for production (Render)
+  const { drizzle } = await import('drizzle-orm/postgres-js');
+  const postgres = await import('postgres');
+  const schema = await import('../shared/schema-postgres');
+  
+  const sql = postgres.default(databaseUrl);
+  db = drizzle(sql, { schema });
+  console.log('Connected to PostgreSQL database');
+} else {
+  // SQLite for development
+  const Database = await import('better-sqlite3');
+  const { drizzle } = await import('drizzle-orm/better-sqlite3');
+  const schema = await import('../shared/schema');
+  
+  const defaultDbPath = path.resolve(process.cwd(), '.sqlite', 'db.sqlite');
+  const dbPath = databaseUrl.replace('sqlite://', '');
+  const dbDir = path.dirname(dbPath);
 
-// Check if the directory exists, and if not, create it
-if (!fs.existsSync(dbDir)) {
-  fs.mkdirSync(dbDir, { recursive: true });
-  console.log(`Database directory created at: ${dbDir}`);
+  // Check if the directory exists, and if not, create it
+  if (!fs.existsSync(dbDir)) {
+    fs.mkdirSync(dbDir, { recursive: true });
+    console.log(`Database directory created at: ${dbDir}`);
+  }
+
+  const sqlite = new Database.default(dbPath);
+  db = drizzle(sqlite, { schema });
+  console.log('Connected to SQLite database');
 }
-// --- END: ADDED CODE ---
 
-// This will now succeed because the directory has been created
-const sqlite = new Database(dbPath);
-
-export const db = drizzle(sqlite, { schema });
+export { db };
