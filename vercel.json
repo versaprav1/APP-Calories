@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "buildCommand": "npm run build:frontend",
+  "outputDirectory": "client/dist/public",
+  "installCommand": "npm install",
+  "framework": "vite",
+  "env": {
+    "VITE_API_URL": "https://your-render-backend-url.onrender.com"
+  }
+}

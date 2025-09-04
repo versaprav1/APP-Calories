@@ -3,7 +3,7 @@ import { CapacitorConfig } from '@capacitor/cli';
 const config: CapacitorConfig = {
   appId: 'com.triathlon.healthtracker',
   appName: 'Triathlon Health Tracker',
-  webDir: 'dist',
+  webDir: 'dist/public',
   server: {
     androidScheme: 'https'
   },

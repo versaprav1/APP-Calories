@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: triathlon-health-tracker-backend
+    env: node
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: triathlon-db
+          property: connectionString
+    healthCheckPath: /api/health
+
+databases:
+  - name: triathlon-db
+    plan: free
+    databaseName: triathlon_health_tracker
+    user: triathlon_user
+
