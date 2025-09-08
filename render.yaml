@@ -9,14 +9,6 @@ services:
       - key: NODE_ENV
         value: production
       - key: DATABASE_URL
-        fromDatabase:
-          name: triathlon-db
-          property: connectionString
+        value: postgresql://neondb_owner:npg_o4zNmfnPe1RF@ep-calm-queen-adcu5qyx-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require
     healthCheckPath: /api/health
-
-databases:
-  - name: triathlon-db
-    plan: free
-    databaseName: triathlon_health_tracker
-    user: triathlon_user
 

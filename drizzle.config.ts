@@ -7,7 +7,7 @@ const isPostgres = databaseUrl.startsWith("postgres://") || databaseUrl.startsWi
 
 export default defineConfig({
   out: "./migrations",
-  schema: "./shared/schema.ts",
+  schema: "./shared/schema-postgres.ts",
   dialect: isPostgres ? "postgresql" : "sqlite",
   dbCredentials: {
     url: databaseUrl,
